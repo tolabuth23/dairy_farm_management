@@ -1,0 +1,84 @@
+<link rel="stylesheet" href="{{url_for("static",filename="css/table_style.css")}}">
+
+
+{% if data %}
+   
+<hr>
+<div class="card">
+    <div class="card-body">
+        <div class="row" style="text-align:end;">
+            <div class="col-10"></div>
+            <div class="col-2">
+        
+                <form action="{{url_for("vaccine_pdf")}}" method="post">
+                   
+                    <input type="hidden" value="{{date_from}}" name="date_from">
+                    <input type="hidden" value="{{date_to}}" name="date_to">
+                    <input type="hidden" value="{{stall_no}}" name="stall_no">
+                    <input type="hidden" value="{{cow_id}}" name="cow_id">
+            
+                    <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-print text-white"></i></button>
+                   
+                </form>
+                <button class="btn btn-info mt-2 btn-sm" style="margin-top: 3px;" id="export"><i class="fa fa-file-excel-o text-white" aria-hidden="true"></i></button>
+            </div>
+           
+           </div>
+        <div style="text-align: center;">
+            <div>
+                <img  src="{{url_for("static",filename="img/brand.png")}}" width="60">
+                <p>{{current_user.farmname}}</p>
+                <p>Milk Sale Report</p>
+            </div>
+        </div>
+
+
+        <div class="">
+            <table id="table" data-excel-name="A very important table" class="table table-bordered table-sm">
+                <thead>
+                    <tr style="background: #d2d1d3;">
+                        <th>No</th>
+                        <th>Date</th>
+                        <th style="text-align:start;">Stall No</th>
+                        <th style="text-align:start;">Cow ID</th>
+                        <th style="text-align:start;">Vaccine</th>
+                        <th style="text-align:start;">Remark</th>
+                        
+                    </tr>   
+                </thead>
+                <tbody>
+                   {% for dt in data %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{dt.date}}</td>
+                        <td>{{dt.stall.stall_number}}</td>
+                        <td>{{dt.cow.cow_no}}</td>
+                        <td>{{dt.vaccinetype.vaccine_name}}</td>
+                        <td>{{dt.remark}}</td>
+                    </tr>
+                   {% endfor %}
+              
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="card mt-2" style="height:60px;">
+      <div class="card-body">
+        <p style="text-align: center" class="text-danger">Don't have Milk Sale report</p>
+      </div>
+    </div>
+      
+    {% endif %}
+
+    
+    <script src="/static/js/table2excel.js"></script>
+    <script>
+      var table2excel = new Table2Excel();
+
+      document.getElementById('export').addEventListener('click', function() {
+        table2excel.export(document.querySelectorAll('table'));
+      });
+    </script>

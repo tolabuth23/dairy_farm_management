@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+    
+    .file-upload {
+      background-color: #ffffff;
+      width: 360px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+    .file-upload-btn {
+      width: 100%;
+      margin: 0;
+      color: #fff;
+      background: #1FB264;
+      border: none;
+      padding: 5px;
+      border-radius: 4px;
+      border-bottom: 4px solid #15824B;
+      transition: all .2s ease;
+      outline: none;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .file-upload-btn:hover {
+      background: #1AA059;
+      color: #ffffff;
+      transition: all .2s ease;
+      cursor: pointer;
+    }
+    .file-upload-btn:active {
+      border: 0;
+      transition: all .2s ease;
+    }
+
+    .file-upload-content {
+      display: none;
+      text-align: center;
+    }
+    
+    .file-upload-input {
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      width:100%;
+      height: 100%;
+      outline: none;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .image-upload-wraps {
+      margin-top: 20px;
+      border: 1px dashed #1FB264;
+      position: relative;
+      height: 180px;
+      width: 220px;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    
+    
+    .image-title-wrap {
+      padding: 0 15px 15px 15px;
+      color: #222;
+    }
+    
+    .drag-text {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }
+    .drag-text h3 {
+      font-weight: 100;
+      text-transform: uppercase;
+      color: #15824B;
+      padding: 60px 0;
+    }
+    .file-upload-image {
+      height: 175px;
+      width: 220px;
+      margin: auto;
+      padding: 0px;
+    }
+    .remove-image {
+      width: 200px;
+      margin: 0;
+      color: #fff;
+      background: #cd4535;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      border-bottom: 4px solid #b02818;
+      transition: all .2s ease;
+      outline: none;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .remove-image:hover {
+      background: #c13b2a;
+      color: #ffffff;
+      transition: all .2s ease;
+      cursor: pointer;
+    }
+    .remove-image:active {
+      border: 0;
+      transition: all .2s ease;
+    }
+  </style>
+
+    <script>
+        function readURL(input) {
+      if (input.files && input.files[0]) {
+    
+        var reader = new FileReader();
+    
+        reader.onload = function(e) {
+          $('.image-upload-wrap').hide();
+    
+          $('.file-upload-image').attr('src', e.target.result);
+          $('.file-upload-content').show();
+    
+          $('.image-title').html(input.files[0].name);
+        };
+    
+        reader.readAsDataURL(input.files[0]);
+    
+      } else {
+        removeUpload();
+      }
+    }
+    
+    function removeUpload() {
+      $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+      $('.file-upload-content').hide();
+      $('.image-upload-wrap').show();
+    }
+    $('.image-upload-wrap').bind('dragover', function () {
+        $('.image-upload-wrap').addClass('image-dropping');
+      });
+      $('.image-upload-wrap').bind('dragleave', function () {
+        $('.image-upload-wrap').removeClass('image-dropping');
+    });
+    
+    </script>
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true"> Edit Cow </i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<form action="{{url_for("edit_cow",id = data.id)}}" method="post" enctype="multipart/form-data" >
+<div class="box box-primary mt-2">
+    <div class="box-header with-border" style="text-align: end;">
+        <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"> Save Cow </i></button>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <div class="box mt-2">
+            <div class="box-header with-border">
+                <a><b>Cow Information</b></a>
+            </div>
+            <div class="box-body">
+                <div class="row row-cols-md-auto">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <lable>Cow ID</label>
+                            <input type="text" name="cow_no" id ="cow_no" value="{{data.cow_no}}"  class="form-control" placeholder="Cow ID">
+                        </div>
+                        <div class="form-group">
+                            <lable>Gender</label>
+                                <select class="form-control" name="gender" value="{{data.gender}}" aria-label="Default select example">
+                                   
+                                                <option value="Male" {% if data.gender == "Male" %}
+                                                selected
+                                                {% else %}
+                                                
+                                                {% endif %} >Male</option>
+                                                <option value="Female" {% if data.gender == "Female" %}
+                                                selected
+                                                {% else %}
+                                                
+                                                {% endif %}>Female</option>
+                                                
+                                              </select>
+                                </select>
+                        </div>
+
+                        <div class="form-group">
+                            <lable>Height(M)</label>
+                             <input type="number" class="form-control" value={{data.height}} name="height" id="exampleFormControlInput1" >
+                        </div>
+                        <div class="form-group">
+                            <lable>Buying Date</label>
+                                <input type="date" value={{data.buy_date}} class="form-control" name="buying_date" id="exampleFormControlInput2" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label>Milk Per Day (LTR) </label>
+                            <input type="text" value="{{data.milk_per_day}}" class="form-control" name="milk_per_day" id="exampleFormControlInput1" placeholder="Month/Day/Year">
+                        </div>
+                        <div class="form-group">
+                            <label>Next Pregnancy Appox Time</label>
+                            <input type="date" class="form-control"value="{{data.next_prenancy}}" name="next_prenancy"  placeholder="">
+                        </div>
+                        
+                    </div>
+                    <!--Start of col md 4 -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleFormControlInput2" class="form-label">Stall No:</label>
+                            <select class="form-control" name="stall_no" aria-label="Default select example">
+                              <option selected >--select--</option> 
+                              {% for dt in stall %}
+                              <option value="{{dt.id}}" {% if data.stall.stall_number == dt.stall_number %}
+                              selected
+                              {% else %}
+                              
+                              {% endif %}
+                                >{{dt.stall_number}}</option>
+                             
+                              
+                               {% endfor %}
+                                
+                              </select>
+                        </div>
+
+                        <div class="form-group">
+                            <lable>Weight</label>
+                                <input type="number" value="{{data.weight}}" name="weight" class="form-control" id="exampleFormControlInput1" >
+                        </div>
+
+
+                        <div class="form-group">
+                            <lable>Animal Type</label>
+                                <select class="form-control" name="animal_type" aria-label="Default select example">
+                                    {% for dt in animaltype %}
+                                               <option value="{{dt.id}}" {% if dt.type_name == data.animaltype.type_name %}
+                                               selected
+                                               {% else %}
+                                               
+                                               {% endif %}>{{dt.type_name}}</option>
+                                               {% endfor %}
+                                                
+                                              </select>
+                        </div>
+                        <div class="form-group">
+                            <lable>Buy From</label>
+                                <input type="text" value="{{data.buy_from}}" class="form-control" name="buy_from" id="exampleFormControlInput1" >
+                        </div>
+
+                        <div class="form-group">
+                            <lable>Pregnant Status</label>
+                                <select class="form-control" value="{{data.pregnant_status}}" name="pregnant_status" aria-label="Default select example">
+                                    <option value="Pregnant" {% if data.pregnant_status == "Pregnant" %}
+                                              selected
+                                              {% else %}
+                                              
+                                              {% endif %}>Yes</option>
+                                                <option value="No Pregnant" {% if data.pregnant_status == "No Pregnant" %}
+                                                selected
+                                                {% else %}
+                                                
+                                                {% endif %}>No</option>
+                                              </select>
+                                  </select>
+                        </div>
+                        <div class="form-group">
+                            <lable>Previous Vaccine Done</label>
+                                <select class="form-control form-select-lg" name="previous_vaccine_done" aria-label="Default select example">
+                                    <option value="Yes" {% if data.previous_vaccine_done == "Yes" %}
+                                    selected
+                                    {% else %}
+                                    
+                                    {% endif %}>Yes</option>
+                                    <option value="No" {% if data.previous_vaccine_done == "No" %}
+                                    selected
+                                    {% else %}
+                                    
+                                    {% endif %}>No</option>
+                                   
+                                  </select>
+                                   
+                                </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <lable>Date of Birth</label>
+                                <input type="date" name="date_of_birth" value="{{data.date_of_birth}}" id ="date_of_birth" class="form-control" placeholder="Birthday">
+                        </div>
+
+                        <div class="form-group">
+                            <lable>Color</label>
+                                <select class="form-control" name="color" aria-label="Default select example">
+                                    <option value="Black" {% if data.color == "Black" %}
+                                    selected
+                                    {% else %}
+                                    
+                                    {% endif %}>Black</option>
+                                    <option value="Red" {% if data.color == "Red" %}
+                                    selected
+                                    {% else %}
+                                    
+                                    {% endif %}>Red</option>
+                                    <option value="Green" {% if data.color == "Green" %}
+                                    selected
+                                    {% else %}
+                                    
+                                    {% endif %}>Green</option>
+                                  </select>
+                                  </select>
+                        </div>
+                        <div class="form-group">
+                            <lable>Cow Age(Days)</label>
+                              {% set dat1 = data.date_of_birth %}
+                               {% set text1 = dat1.strftime("%Y,%m,%d") %}
+                               {% set d1 = text1.split(",") %}
+                               {% set dat2 = datetime.datetime.now() %}
+                               {% set text2 = dat2.strftime("%Y,%m,%d") %}
+                               {% set d2 = text2.split(",") %}
+                               {% set wid = d((d2[0]|int), (d2[1]|int), (d2[2]|int)) - d((d1[0]|int), (d1[1]|int), (d1[2]|int)) %}
+                               {% set wid1 = wid.days %}
+
+                            <input type="number" name="animal_age" value="{{wid1|int}}" id ="animal_age" class="form-control" placeholder="Cow Age">
+                        </div>
+                        <div class="form-group">
+                            <lable>Buying Price</label>
+                                <input type="number" value={{data.buying_price}} class="form-control" id="exampleFormControlInput1" name="buying_price">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount of Pregnent (Previouse Record) :</label>
+                            <input type="number" value="{{data.previous_pregnant}}" class="form-control" name="previous_pregnant" id="exampleFormControlInput1" >
+                          </div>
+                        <div class="form-group">
+                            <label>Note:*</label>
+                            <textarea name="note" min="1" class="form-control" style="border-radius: 5px;" type="text"  placeholder="Note">{{data.note}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+        <!--start of box Vaccine cow-->
+        <div class="col-md-6">
+            <div class="box mt-2" >
+                <div class="box-header with-border" >
+                    <a><b>Vaccine Information</b></a>
+                </div>
+                <div class="box-body" style="height: 280px;">
+                    {% for i in vacc %}
+                   <div class="form-group">
+                        <div class="checkbox">
+                        <label>
+                        <input type="checkbox" value="{{i.id}}" name="select_previous_vaccine"
+                         {% if i.vaccine_name ==  data.vaccinetype.vaccine_name %} 
+                         checked
+                         {% else %}{% endif %}>
+                        {{i.vaccine_name}}
+                        </label>
+                        </div>
+                    </div>
+
+                  
+                     {% endfor %}
+                     
+                </div>
+            </div>
+        </div>
+
+        <!--end of box vaccine-->
+        <!--col box image cow-->
+        <div class="col-md-6">
+            <div class="box mt-2">
+                <div class="box-header with-border">
+                    <a><b>Vaccine Information</b></a>
+                </div>
+                <div class="box-body">
+                    <div class="file-upload ">
+                        <div class="image-upload-wrap">
+                          <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" name="cow_img"/>
+                            <div class="drag-text">
+                              <img src="{{url_for("static", filename="img/"+data.cow_img)}}" width="220" height="185 "/>
+                            </div>
+                        </div>
+                        <div class="file-upload-content">
+                          <img class="file-upload-image" src="{{url_for("static", filename="img/"+data.cow_img)}}" alt="your image" />
+                          <div class="image-title-wrap">
+                          
+                          </div>
+                        </div>
+                        <br>
+                        <button style="margin-left: 58px; width: 220px; height: 30px; text-align: cetner;" class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
+                        </div>
+                     
+                </div>
+            </div>
+        </div>
+        <!--end box image cow-->
+        </div>
+       
+    </div>
+    <!--End form card-->
+</div>
+
+</form>
+</section>
+
+
+</section>
+<!--End Content-->
+<script>
+    $(function () {
+      // Replace the <textarea id="editor1"> with a CKEditor
+      // instance, using default configuration.
+      CKEDITOR.replace('editor1')
+      //bootstrap WYSIHTML5 - text editor
+      $('.textarea').wysihtml5()
+    })
+  </script>
+{% endblock %}
+

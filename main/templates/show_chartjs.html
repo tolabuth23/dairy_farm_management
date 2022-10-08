@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Getting Started with Chart JS with www.chartjs3.com</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .chartMenu {
+        width: 100vw;
+        height: 40px;
+        background: #1A1A1A;
+        color: rgba(255, 26, 104, 1);
+      }
+      .chartMenu p {
+        padding: 10px;
+        font-size: 20px;
+      }
+      .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        background: rgba(255, 26, 104, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .chartBox {
+        width: 700px;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px rgba(255, 26, 104, 1);
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chartMenu">
+      <p>WWW.CHARTJS3.COM (Chart JS 3.9.1)</p>
+      <p>
+        
+      </p>
+    </div>
+    <div class="chartCard">
+      <div class="chartBox">
+        <canvas id="myChart"></canvas>
+        Start: <input id="start" type="date" > End: 
+        <input id= "end" type="date" >
+        <button onclick="filterDate()">Filter</button><br>
+        <button onclick="resetDate()">Reset</button>
+
+      </div>
+    </div>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script>
+    // setup 
+    const dates = [{% for dt in d %}"{{dt}}",{% endfor %}]
+    const datapoints = [{% for dt in ex %}"{{dt.total_amount}}",{% endfor %}]; 
+    const convertedDates = dates.map(date => new Date(date).setHours(0,0,0,0));
+    console.log(convertedDates)
+    const data = {
+      labels: dates,
+      datasets: [{
+        label: 'Weekly Sales',
+        data: datapoints,
+        backgroundColor: [
+          'rgba(255, 26, 104, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(0, 0, 0, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 26, 104, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(0, 0, 0, 1)'
+        ],
+        borderWidth: 1
+      }]
+    };
+
+    // config 
+    const config = {
+      type: 'bar',
+      data,
+      options: {
+        scales: {
+        x: {
+            type: 'time',
+            time: {
+                unit: 'day'
+            }
+        },
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+
+    // render init block
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+    function filterDate(){
+        //(new Date('2022-10-01 00:00:00 GMT+0800'))
+        const start1 = new Date(document.getElementById("start").value);
+        const start = start1.setHours(0,0,0,0);
+        const end1 = new Date(document.getElementById("end").value);
+        const end = end1.setHours(0,0,0,0);
+
+        const  filterDates = convertedDates.filter(date => date >= start && date <=end )
+        myChart.config.data.labels = filterDates;
+        //working on the data 
+        const startArray = convertedDates.indexOf(filterDates[0]);
+        const endArray = convertedDates.indexOf(filterDates[filterDates.lenght-1]);
+        console.log(startArray)
+        console.log(endArray);
+        const copydatapoints = [...datapoints];
+        copydatapoints.splice(endArray + 1 , filterDates.lenght);
+        copydatapoints.splice(0, startArray)
+        console.log(copydatapoints)
+        myChart.config.data.datasets[0].data =copydatapoints;
+        myChart.update();
+
+    }
+    function resetDate(){
+        myChart.config.data.labels = convertedDates;
+        myChart.config.data.datasets[0].data = datapoints;
+        myChart.update();
+    }
+    </script>
+
+  </body>
+</html>

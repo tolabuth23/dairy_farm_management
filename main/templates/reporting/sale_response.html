@@ -1,0 +1,261 @@
+<link rel="stylesheet" href="{{url_for("static",filename="css/table_style.css")}}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<style>
+    .highcharts-figure,
+    .highcharts-data-table table {
+      min-width: 320px;
+      max-width: 800px;
+      margin: 1em auto;
+    }
+    
+    .highcharts-data-table table {
+      font-family: Verdana, sans-serif;
+      border-collapse: collapse;
+      border: 1px solid #ebebeb;
+      margin: 10px auto;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+    }
+    
+    .highcharts-data-table caption {
+      padding: 1em 0;
+      font-size: 1.2em;
+      color: #555;
+    }
+    
+    .highcharts-data-table th {
+      font-weight: 600;
+      padding: 0.5em;
+    }
+    
+    .highcharts-data-table td,
+    .highcharts-data-table th,
+    .highcharts-data-table caption {
+      padding: 0.5em;
+    }
+    
+    .highcharts-data-table thead tr,
+    .highcharts-data-table tr:nth-child(even) {
+      background: #f8f8f8;
+    }
+    
+    .highcharts-data-table tr:hover {
+      background: #f1f7ff;
+    }
+    
+    input[type="number"] {
+      min-width: 50px;
+    }
+</style>
+
+{% if data %}
+   
+<hr>
+
+        <div class="row" style="text-align:end;">
+            <div class="col-10"></div>
+            <div class="col-2">
+        
+                <form action="{{url_for("sale_pdf")}}" method="post">
+                   
+                    <input type="hidden" value="{{date_from}}" name="date_from">
+                    <input type="hidden" value="{{date_to}}" name="date_to">
+                   <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-print text-white"></i></button>
+                </form>
+                <button class="btn btn-info mt-2 btn-sm" style="margin-top: 3px;" id="export"><i class="fa fa-file-excel-o text-white" aria-hidden="true"></i></button>
+            </div>
+           
+           </div>
+        <div style="text-align: center;">
+            <div>
+                <img  src="{{url_for("static",filename="img/brand.png")}}" width="60">
+                <p>{{current_user.farmname}}</p>
+                <p>Milk Sale Report</p>
+            </div>
+        </div>
+
+
+        <div class="box-body table-responsive">
+          <table class="table table-hover table-bordered">
+                <thead>
+                    <tr >
+                        <th>No</th>
+                        <th>Date</th>
+                        <th style="text-align:start;">Sale No</th>
+                        <th style="text-align:start;">Supplier Name</th>
+                        <th style="text-align:start;">Contact</th>
+                        <th style="text-align:start;">Lite</th>
+                        <th>Cost/Lite</th>
+                        <th>Total Price</th>
+                    </tr>   
+                </thead>
+                <tbody>
+                   {% for dt in data %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{dt.date}}</td>
+                        <td>{{dt.sale_no}}</td>
+                        <td>{{dt.supplier_name}}</td>
+                        <td>{{dt.contact}}</td>
+                        <td>{{dt.lite}}</td>
+                        <td>{{dt.price}}</td>
+                        <td>{{dt.total}}</td>
+
+                    </tr>
+                   {% endfor %}
+                    
+               <tr>
+                    <td colspan="7" style="text-align: end;">Total: </td>
+                    <td>฿ {{totalprice|float}}</td>
+                    
+
+               </tr>
+                </tbody>
+            </table>
+        </div>
+     
+        
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+   
+
+
+    <div class="row m-2">
+      <div class="col-md-6">
+          <div class="box">
+              <div class="box-body">
+                  <canvas id="myChart" width="50" height="50"></canvas>
+                
+              </div>
+          </div>
+         </div>
+
+         <div class="col-md-6">
+          <div class="box">
+              <div class="box-body">
+                <figure class="highcharts-figure">
+                  <p class="highcharts-description text-center">
+                    Supplier Vs Lite
+                    
+                </p>
+                  <canvas id="myCharts" width="50" height="44"></canvas>
+                 
+                  </figure>
+            
+                  </canvas>
+              </div>
+          </div>
+         </div>
+    </div>
+    
+
+
+
+
+
+
+        <script >
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    const myChart = new Chart(ctx,{
+    type: 'line',
+    data: {
+        labels: [{% for dt in dates %}"{{dt}}",{% endfor %}],
+        datasets: [{
+            label: '# Total Price Milk (Baht)',
+            data: [{% for dt in da %}{{dt}},{% endfor %}],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+<script>
+const ctxs= document.getElementById('myCharts').getContext('2d');
+const myCharts = new Chart(ctxs, {
+type: 'pie',
+data: {
+    labels: [{% for dt in sup %}"{{dt}}",{% endfor %}],
+    datasets: [{
+        label: '# Total Price Milk',
+        data: [{% for dt in total %}{{dt}},{% endfor %}],
+        backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+    }]
+},
+options: {
+    scales: {
+        y: {
+            beginAtZero: true
+        }
+    }
+}
+});
+</script>
+
+ 
+
+    </div>
+
+    {% else %}
+    <div class="card mt-2" style="height:60px;">
+      <div class="card-body">
+        <p style="text-align: center" class="text-danger">Don't have Milk Sale report</p>
+      </div>
+    </div>
+      
+    {% endif %}
+   
+    <script src="/static/js/table2excel.js"></script>
+    <script>
+      var table2excel = new Table2Excel();
+
+      document.getElementById('export').addEventListener('click', function() {
+        table2excel.export(document.querySelectorAll('table'));
+      });
+    </script>
+
+
+<!--End of hightChart -->

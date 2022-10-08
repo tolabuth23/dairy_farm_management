@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h4 ><i class="fa fa-cubes text-primary" aria-hidden="true">Vaccine Monitor Report</i></h4>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border">
+        <a ><h4><i class="fa fa-plus-circle" aria-hidden="true">  Search Feild </i></h4></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-3">
+            <select style="color: #565050;" name="stall_no" class="form-control  stall_list stall_no" aria-label=".form-select-sm example"
+             data-live-search="true"   id="search_stall_id" required>
+             <option selected>--Select--</option>
+                {% for db in stall %}
+                <option value="{{db.id}}">{{db.stall_number}}</option>
+             {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            {% if datas %}
+            <div id="form-group">
+                <select style="color: #565050;" name="cow_id" required id="show_sub_categories"  class="form-control cow_id">
+                 
+                </select>
+            </div>
+         {% else %}
+            <div id="form-group">
+                <select style="color: #565050;" name="cow_id" required id="show_sub_categories" class="form-control cow_id">
+                  <option value="" selected="selected">--Select--</option>
+                </select>
+            </div>
+          {% endif %}
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" type="date" id="date_from" name="date_from" placeholder="Select Your Date From"/>
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" type="date" id="date_to" name="date_to" placeholder="Select Your Date From"/>
+        </div>
+        <div class="col-md-12" style="margin-top: 8px;">
+            <button id="vaccine_monitor" type="submit" class="btn btn-info " style="width:100%;"><i class='bx bx-search-alt-2'></i> Search</div>
+        </div>
+        <div class="col-md-12" >
+            <div id="vaccine_monitors" >
+
+            </div>
+        </div>
+      </div>
+      
+     
+
+    </div>
+    <!--End form card-->
+</div>
+</section>
+</section>
+<!--End Content-->
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#vaccine_monitor').click(function(){
+        $.post("/get_vaccine_monitor", {
+        stall_no : $('.stall_no').val(),
+        cow_id: $('.cow_id').val(),
+        date_from: $('#date_from').val(),
+        date_to :$('#date_to').val()
+        }, function(response){ 
+            $('#vaccine_monitors').html(response);
+            $('#vaccine_monitors').append(response.htmlresponse);
+        });
+        return false;
+    });
+
+    $('#search_stall_id').change(function(){
+        $.post("/get_sanimal", {
+        parent_id: $('#search_stall_id').val(),
+        }, function(response){ 
+            $('#show_sub_categories').html(response);
+            $('#show_sub_categories').append(response.htmlresponse);
+        });
+        return false;
+      });
+
+      });
+  </script>
+  
+  
+{% endblock %}
+

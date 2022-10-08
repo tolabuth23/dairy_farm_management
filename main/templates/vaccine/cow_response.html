@@ -1,0 +1,116 @@
+<h4 class="text-center text-primary">Cow Detail</h4>
+<hr>
+<div class="row">
+    
+    <div class="col-lg-6">
+        <img src="{{url_for("static", filename="/img/"+data.cow_img)}}" 
+        class="img-thumbnail mt-3 "
+         style="width: 480px; height:350px; object-fit:fill ; border: 2px solid #ada4a4;"
+          alt="Cow Image"/>
+    </div>
+    <div class="col-lg-5 mt-3">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>Date of Birthday</td>
+                    <td>{{data.date_of_birth}}    
+                </tr>
+                <tr>
+                    <td>Animal Live Age</td>
+                    <td>{{data.animal_age}}    
+                </tr>
+                <tr>
+                    <td>Buy Time to Current</td>
+                    <td>{{data.buy_date}}    
+                </tr>
+                <tr>
+                    <td>Animal Gender</td>
+                    <td>{{data.gender}}    
+                </tr>
+                <tr>
+                    <td>Animal Type</td>
+                    <td>{{data.animaltype.type_name}}    
+                </tr>
+                <tr>
+                    <td>Pregnant Status</td>
+                    <td>{{data.pregnant_status}}</td>
+                </tr>
+                
+            </tbody/>
+        </table>
+    </div>
+    <div class="col-lg-1">
+    </div>
+</div>
+<br>
+<h4 class="text-center text-primary">Pending Vaccine List (Auto Calculate)</h4>
+<hr>
+
+<div class="table-responsive m-1">
+    <table class="table table-hover table-bordered ">
+        <thead>
+           <tr class="bg-info text-white">
+            <th>Vaccine Name</th>
+            <th>Time(Days)</th>
+            <th>Repeat</th>
+            <th>Dose</th>
+            <th>Note</th>
+           </tr>
+        </thead>
+        <tbody>
+            {% for dt in vactype %}
+            <tr style="color: #565050;">
+                <td>{{dt.vaccine_name}}</td>
+                <td>{{dt.period_day}}</td>
+                <td>{{dt.repeat_vaccine}}</td>
+                <td>{{dt.dose}}</td>
+                <td>{{dt.note}}</td>
+            </tr>
+            {% endfor %}
+           
+           
+            
+        </tbody>
+    </table>
+</div>
+<br>
+<h4 class="text-center text-info">Vaccine Done List</h4>
+<hr>
+
+<div class=" m-1">
+   {% if getv  %}
+   <div class="box box-solid">
+       <div class="box-body no-padding table-responsive">
+           <table class="table table-hover table-bordered">
+               <thead>
+                   <tr class="bg-info text-white text-center">
+                        <th >No</th>
+                        <th>Date</th>
+                       <th style="text-align: start;">Vitamin Name</th>
+                       <th>Remark</th>
+                       <th>Given Time</th>
+                   <tr>
+                   </thead>
+               <tbody>
+                {% for dt in getv %}
+                   <tr style="color: #565050;">
+                        <td style="text-align: center;">{{loop.index}}</td>
+                        <td style="text-align: center;">{{dt.date}}</td>
+                       <td>{{dt.vaccinetype.vaccine_name}}</td>
+                       <td class="text-center">{{dt.remark}}</td>
+                       <td class="text-center">{{dt.time}}</td>
+                   </tr>
+                   {% endfor %}
+               </tbody>
+           </table>
+       </div>
+   </div>
+
+  
+   
+   
+   {% else %}
+   <p class="text-center text-danger">This cow not yet get vaccine!!!!</p>
+   {% endif %}
+
+</div>

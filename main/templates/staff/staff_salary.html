@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-gg-circle text-primary" aria-hidden="true">  Salary</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border">
+        <h3 class="box-title text-primary"><i class="fa fa-money" aria-hidden="true">  Add Salary</i>  </h3>
+        <div class="box-tools pull-right">
+            
+        </div>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <!--Start row form-->
+    <form action="{{url_for("add_salary")}}" method="POST" enctype="multipart/form-data">
+        <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Pay Date</label>
+                            <input type="date" class="form-control" placeholder="Pay Date" name="pay_date" maxlength="100" autocomplete="off" required="">
+                        </div>
+                        <div class="form-group">
+                            <label>Employee</label>
+                           <select class="form-control select2" name="staff_id" id="employee_id" data-placeholder="Employee Name" style="width: 100%;">
+                          <option>Employee Name</option>
+                            {% for dt in staff %}
+                          <option value="{{dt.id}}">{{dt.fullname}}</option>
+                          {% endfor %}
+                           </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Month</label>
+                            <select class="form-control select2" name="month" data-placeholder="Select a Month" style="width: 100%;">
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                          
+                            {% if datas %}
+                            <div class="form-group" id="salary_amount">
+                             
+                            </div>    
+                                {% else %}
+                                <div class="form-group" id="salary_amount">
+                                <label>Month Salary</label>
+                                <input type="number" class="form-control" placeholder="Salary" name="salary_amount" maxlength="100" autocomplete="off" required=""></input>
+                              </div>  
+                                {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Year</label>
+                            <select class="form-control select2" name="year" data-placeholder="Select a State" style="width: 100%;">
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                           <label>Addition Salary</label>
+                           <input type="number" class="form-control" placeholder="Salary" name="addition_amount" id="addition_money" maxlength="100" autocomplete="off" required=""></input>
+                        </div>
+                    </div>
+            </div>
+
+            <!--End column form-->
+            <button type="submit" class="btn btn-primary text-start">Submit</button>
+   
+
+    </form>
+        <!--End of Form-->
+        <hr class="m-3">
+        <h4 class="m-2"><i class="fa fa-user text-primary"> Salary Staff</i></h4>
+        <div class="box-body table-responsive">
+          <table class="table table-hover table-bordered">
+              <thead>
+                  <tr>
+                    <th>No</th>
+                    <th style="width:10%">Image</th>
+                    <th style="width:20%">Employee Name</th>
+                    <th style="width:10%">Pay Date</th>
+                    <th style="width:10%">Month</th>
+                    <th style="width:10%">Year</th>
+                    <th style="width:10%">Salary Month</th>
+                    <th style="width:15%">Addition Salary</th>
+                    <th style="width:10%">Total</th>
+                    <th style="width:10%">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for dt in data.items %}
+                <tr>
+                    <td style="text-align:center">{{loop.index}}</td>
+                    <td style="text-align: center"><img src="{{url_for("static",filename="img/"+dt.staff.staff_img)}}" style="width:32px;" /></td>
+                    <td>{{dt.staff.fullname}}</td>
+                    <td>{{dt.pay_date}}</td>
+                    <td>{{dt.month}}</td>
+                    <td>{{dt.year}}</td>
+                    <td>{{dt.salary_amount}}</td>
+                    <td>{{dt.addition_amount}}</td>
+                    <td>{{dt.total}}</td>
+                    <td style="text-align:center">
+                        <button class="btn btn-sm btn-danger btn-sm" data-toggle="modal"  
+                        data-target="#exampleModal2{{dt.id}}" 
+                        ><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                    </td>
+                     <!-- start modal hapus -->
+                     <div class="modal fade" id="exampleModal2{{dt.id}}">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Delete Employee Salary</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Do you want to delete your data?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a href="{{url_for("delete_esalary",id = dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+            <!-- end  -->
+                </tr>
+                {% endfor %}
+               
+            </tbody>
+          </table>
+        </div>
+
+                    <!--Start of row pagination-->
+
+                    <div class="row mt-3">
+                        <div class="col-lg-7">
+                            <p style="color:  #4581bd;">showing <b><i>{{data.page}}</i></b> to <b><i>{{data.pages}}</i></b> of <b><i>{{data.pages}}</i></b> entries 
+                        </div>
+                        <div class="col-lg-5 justify-content-end">
+                            <a  href="{{url_for("staff_salary", page=data.prev_num)}}" class="btn btn-primary  btn-sm 
+                            {% if data.page == 1 %}disabled{% endif %}
+                            ">
+                            Prevous
+                        </a>
+                        {% for page_num  in data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            {% if data.page == page_num %}
+                            <a href="{{url_for("staff_salary", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                            {% else %}
+                            <a href="{{url_for("staff_salary", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                            {% endif %}
+                        {% else %}
+                        ...
+                        {% endif %}
+                        {% endfor %}
+                        <a href="{{url_for("staff_salary", page=data.next_num)}}" class="btn btn-primary  btn-sm 
+                        {% if data.page == data.pages %}disabled{% endif %} ">
+                        Next
+                        </a>
+                        </div>
+                    </div>
+                    <!--End of row pagination-->
+
+
+    </div>
+    <!--End form card-->
+ 
+</div>
+</section>
+
+</section>
+<!--End Content-->
+
+
+
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  });
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('#employee_id').change(function(){
+      $.post("/get_salary_info", {
+      parent_id: $('#employee_id').val(),
+      }, function(response){ 
+          $('#salary_amount').html(response);
+          $('#salary_amount').append(response.htmlresponse);
+      });
+      return false;
+    });
+
+   
+    });
+</script>
+
+{% endblock %}
+

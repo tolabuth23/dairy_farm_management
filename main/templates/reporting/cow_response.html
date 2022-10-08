@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="{{url_for("static",filename="css/table_style.css")}}">
+
+
+{% if data %}
+   
+<hr>
+<div class="card">
+    <div class="card-body">
+        <div style="text-align:end;">
+            <img  src="{{url_for("static",filename="img/brand.png")}}" width="30">
+        </div>
+        <div style="text-align: center;">
+            <div>
+                <img  src="{{url_for("static",filename="img/brand.png")}}" width="60">
+                <p>{{current_user.farmname}}</p>
+                <p>Cow Statistic Report</p>
+            </div>
+        </div>
+
+
+        <div class="">
+            <table class="table table-bordered table-sm">
+                <thead>
+                    <tr style="background: #d2d1d3;">
+                        <th>No</th>
+                        <th>Date</th>
+                        <th style="text-align:start;">Stall No</th>
+                        <th style="text-align:start;">Cow ID</th>
+                        <th style="text-align:start;">Vaccine</th>
+                        <th style="text-align:start;">Remark</th>
+                    </tr>   
+                </thead>
+                <tbody>
+                  
+              
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="card mt-2" style="height:60px;">
+      <div class="card-body">
+        <p style="text-align: center" class="text-danger">Don't have Cow Statistic report</p>
+      </div>
+    </div>
+      
+    {% endif %}

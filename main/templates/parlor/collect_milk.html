@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true">  Collect Milk</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border" style="text-align: end;">
+        <a href="{{url_for("newstallmilk")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  Add Milk</i></a>
+       
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+      
+        <div class="box-body table-responsive">
+          <table class="table table-hover table-bordered">
+              <thead>
+                  <tr>
+                    <th style="width:10%">No</th>
+                    <th style="width:30%">Date</th>
+                    <th style="width:20%">Stall No</th>
+                    <th style="width:30%">Total Milk (Lite)</th>
+                    </th>
+                    <th style="width:20%">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for dt in data.items %}
+                    <tr style="color: #2978c6;">
+                        <td>{{loop.index}}</td>
+                        <td>{{dt.date}}</td>
+                        <td >{{dt.stall_no}}</td>
+                        <td  -o> {{dt.totalmilk}}</td>
+                          <td>
+                            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{dt.id}}" 
+                            data-bs-whatever=" Cow"><i class="fa fa-eye" aria-hidden="true"></i></button>
+      
+                    <!-- start of modal -->
+                    <div class="modal fade" id="exampleModal{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title text-primary"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>  {{dt.stall_no}}</h4>
+                          </div>
+                          <div class="modal-body">
+                            <div class="box-body table-responsive">
+                              <table class="table table-hover table-bordered">
+                              <thead>
+                                <tr>
+                                  <th scope="col">No</th>
+                                  <th scope="col">Cow ID</th>
+                                  <th scope="col">Milk</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                               {% for key, item in dt.milk_detail.items() %}
+                                <tr>
+                                  <td>{{loop.index}}</td>
+                                <td>{{item["cow_no"]}}</td>
+                                <td>{{item["milk"]}} lite</td>
+                               </tr>
+                               {% endfor %}
+                              
+                               </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        
+                          </div>
+                      </div>
+                      </div>
+                  </div>
+
+                    <!-- end of modal -->  
+
+
+
+                            <a  data-toggle="modal"  
+                            data-target="#exampleModal2{{dt.id}}" 
+                            data-bs-whatever="User" href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    
+                        </td>
+                    </tr>
+                    
+                
+                     <!-- start of delete  -->
+                     <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title text-primary"><i class="fa fa-trash-o" aria-hidden="true"></i>  Delete Employee Salary</h4>
+                          </div>
+                          <div class="modal-body">
+                         <h5>Do you want to delete your data?</h5>
+                         <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <a href="{{url_for("delete_collect_milk", id= dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                          </div>
+                          </div>
+
+                          
+                      </div>
+                      </div>
+                  </div>
+                  <!-- end of delete -->
+                  {% endfor %}  
+            </tbody>
+          </table>
+        </div>
+
+           <!--Start of row pagination-->
+
+           <div class="row mt-3">
+            <div class="col-lg-7">
+                <p style="color:  #4581bd;">showing <b><i>{{data.page}}</i></b> to <b><i>{{data.pages}}</i></b> of <b><i>{{data.pages}}</i></b> entries 
+            </div>
+            <div class="col-lg-5 justify-content-end">
+                <a  href="{{url_for("collect_milk", page=data.prev_num)}}" class="btn btn-primary  btn-sm 
+                {% if data.page == 1 %}disabled{% endif %}
+                ">
+                Prevous
+              </a>
+             {% for page_num  in data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+             
+             {% if page_num %}
+                {% if data.page == page_num %}
+                   <a href="{{url_for("collect_milk", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                {% else %}
+                  <a href="{{url_for("collect_milk", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                {% endif %}
+             {% else %}
+             ...
+             {% endif %}
+             {% endfor %}
+              <a href="{{url_for("collect_milk", page=data.next_num)}}" class="btn btn-primary  btn-sm 
+              {% if data.page == data.pages %}disabled{% endif %} ">
+              Next
+            </a>
+              </div>
+        </div>
+        <!--End of row pagination-->  
+
+    </div>
+    <!--End form card-->
+ 
+</div>
+</section>
+
+</section>
+<!--End Content-->
+
+
+
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  });
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('#employee_id').change(function(){
+      $.post("/get_salary_info", {
+      parent_id: $('#employee_id').val(),
+      }, function(response){ 
+          $('#salary_amount').html(response);
+          $('#salary_amount').append(response.htmlresponse);
+      });
+      return false;
+    });
+
+   
+    });
+</script>
+
+{% endblock %}
+

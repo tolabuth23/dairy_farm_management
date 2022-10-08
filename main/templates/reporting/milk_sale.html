@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h4 ><i class="fa fa-cubes text-primary" aria-hidden="true">Milk Sale Report</i></h4>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border">
+        <a ><h4><i class="fa fa-plus-circle" aria-hidden="true">  Search Feild </i></h4></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-4">
+            <input class="form-control" type="date" id="date_from" name="date_from" placeholder="Select Your Date From"/>
+        </div>
+        <div class="col-md-4">
+            <input class="form-control" type="date" id="date_to" name="date_to" placeholder="Select Your Date From"/>
+        </div>
+        <div class="col-md-4">
+            <button id="milk_sale" type="submit" class="btn btn-info " style="width:100%;"><i class='bx bx-search-alt-2'></i> Search</div>
+        </div>
+
+        <div class="col-md-12">
+            <div id="show_sale" >
+
+            </div>
+        </div>
+      </div>
+      
+     
+
+    </div>
+    <!--End form card-->
+</div>
+</section>
+</section>
+<!--End Content-->
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#milk_sale').click(function(){
+        $.post("/get_milk_sale", {
+        date_from : $('#date_from').val(),
+        date_to: $('#date_to').val()
+        }, function(response){ 
+            $('#show_sale').html(response);
+            $('#show_sale').append(response.htmlresponse);
+        });
+        return false;
+    })
+      });
+  </script>
+  
+{% endblock %}
+

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h4 ><i class="fa fa-cubes text-primary" aria-hidden="true">Cow Statistic Report</i></h4>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border">
+        <a ><h4><i class="fa fa-plus-circle" aria-hidden="true">  Animal Information </i></h4></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-6">
+            <label for="exampleFormControlInput1" class="form-label">Stall No :</label>
+         <select class="form-control search_stall_id" name="stall_id" aria-label="Default select example" id="search_stall_id">
+             <option selected>--select--</option>
+             {% for dt in stall %}
+              {% if calf %}{% else %}{% endif %}
+                <option value="{{dt.id}}">{{dt.stall_number}}</option>
+            {% endfor %}
+             </select>
+        </div>
+        <div class="col-md-6">
+            <label for="exampleFormControlInput1" class="form-label">Cow ID :</label>
+         {% if datas %}
+         <div class="form-group" >
+              <select id="show_sub_categories" name="cow_id" required  class="form-control search_cow_id">
+                 <option value="" selected="selected">--select--</option>
+              </select>
+          </div>
+         {% else %}
+         <div class="form-group" >
+          <select id="show_sub_categories" name="cow_id" class="form-control search_cow_id">
+              <option value="" selected="selected">--select--</option>
+           </select>
+          </div>
+          {% endif %}
+        </div>
+      
+
+        <div class="col-md-12">
+            <div id="show_cow_info">
+                    
+            </div>
+        </div>
+      </div>
+      
+     
+
+    </div>
+    <!--End form card-->
+</div>
+</section>
+</section>
+<!--End Content-->
+
+  
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#cow_statistic').click(function(){
+        $.post("/get_cow_statistic", {
+        stall_no : $('.stall_no').val(),
+        cow_id: $('.cow_id').val(),
+        }, function(response){ 
+            $('#show_cow').html(response);
+            $('#show_cow').append(response.htmlresponse);
+        });
+        return false;
+    });
+
+    $('.search_cow_id').change(function(){
+        $.post("/get_scow_info", {
+          parent_id: $('.search_cow_id').val(),
+          stall_id: $('.search_stall_id').val()
+        }, function(response){
+          $('#show_cow_info').html(response);
+          $('#show_cow_info').append(response.htmlresponse)
+        });
+        return false;
+        });
+    
+        $('#search_stall_id').change(function(){
+            $.post("/get_animal_vaccine", {
+            parent_id: $('#search_stall_id').val(),
+            }, function(response){ 
+                $('#show_sub_categories').html(response);
+                $('#show_sub_categories').append(response.htmlresponse);
+            });
+            return false;
+          });
+
+
+      });
+  </script>
+{% endblock %}
+

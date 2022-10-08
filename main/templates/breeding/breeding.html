@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true">  Cow Breeding List</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border" style="text-align: end;">
+        <a href="{{url_for("add_breeding")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  Add Breeding </i></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <div class="box-body table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>Stall No</th>
+                    <th>Cow ID</th>
+                    <th>Breeding Type</th>
+                    <th>Semen Type</th>
+                    <th>Semen Push Date</th>
+                    <th>Breeding Start Date</th>
+                    <th>Breeding Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for dt in data.items %}
+                <tr>
+                  <td>{{loop.index}}</td>
+                  <td>{{dt.stall.stall_number}}</td>
+                  <td>{{dt.cow.cow_no}}</td>
+                  <td style="text-align: start;">{{dt.pregnancy_type}}</td>
+                  <td style="text-align: start;">{{dt.animaltype.type_name}}</td>
+                  <td>{{dt.semen_push_date}}</td>
+                  <td>{{dt.pregnancy_start_date}}</td>
+                  <td class="text-primary">{{dt.pregnancy_status}}</td>
+                  <td>
+                  <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{dt.id}}" 
+                  data-whatever=" Cow"><i class="fa fa-eye" aria-hidden="true"></i></button>
+
+                    <!-- start of modal -->
+                    <div class="modal fade" id="exampleModal{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              
+                              <h5 class="modal-title text-info" id="exampleModalLabel{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Pregnancy Detail</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            </div>
+
+                            <div class="modal-body">
+                              <table class="table text-primary" >
+                                <tbody>
+                                    <tr >
+                                        <td scope="col" style="text-align: start;">Semen Cost</td>
+                                        <td scope="col"style="text-align: start;" >{{dt.semen_cost}} Baht</th>
+                                      </tr>
+                                      <tr >
+                                        <td scope="col" style="text-align: start;">Note</td>
+                                        <td scope="col" style="text-align: start;">{{dt.note}}</td>
+                                      </tr>
+                                      <tr  >
+                                        <td scope="col" style="text-align: start;">Approximate Delivery Date: </td>
+                                        <td style="text-align: start;">{{dt.delivery_date}}</td>
+                                      </tr>
+                                      <tr >
+                                        <td style="text-align: start;" width="30%">Breeding Progress :</th>
+                                        <td style="text-align: start;" width="70%">
+                                          {% set dat1 = dt.pregnancy_start_date %}
+                                          {% set text1 = dat1.strftime("%Y,%m,%d") %}
+                                          {% set d1 = text1.split(",") %}
+                                          {% set dat2 = datetime.datetime.now() %}
+                                          {% set text2 = dat2.strftime("%Y,%m,%d") %}
+                                          {% set d2 = text2.split(",") %}
+                                          {% set wid = d((d2[0]|int), (d2[1]|int), (d2[2]|int)) - d((d1[0]|int), (d1[1]|int), (d1[2]|int)) %}
+                                          {% set wid1 = wid.days %}
+                                          {% set wids = wid1|int - 1 %}
+                                          {% set wid3 = wids|int /279 %}
+                                          {% set wid4 = wid3* 99 + 1 %}
+                                          <span class="progress-meter-text text-lg-end">{{wid1|int}}/280 day</span>
+                                          <div class="progress" style="height:20px">
+                                           
+                                           
+                                            <div class="progress-bar" style="width:{{wid4|int}}%;height:20px">
+                                              <span class="progress-meter-text">{{wid1|int}} day</span>
+                                            </div> 
+                                          </div>
+                                        </td>
+                                      </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- end of modal -->
+
+                      <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#exampleModal1{{dt.id}}" 
+                      data-whatever="Branch"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                      <button class="btn btn-sm btn-danger" data-toggle="modal"  
+                      data-target="#exampleModal2{{dt.id}}" 
+                      data-whatever="User"><i class="fa fa-trash-o" aria-hidden="true"></i></button> 
+                     
+                   
+            
+                 </td>
+                  <!--Start edit breeding-->
+                 <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-info" id="exampleModalLabel{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Edit Pregnancy Status</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                        
+                        </div>
+                        <div class="modal-body">
+                        <form action="{{url_for("edit_breeding",id = dt.id)}}"  id = "" method="POST">
+                          <div class="form-group">
+                              <label class="form-label" style="color: #06871c;">Breeding Start Date</label>
+                              <input type="date" style="color: #605f5f;" class="form-control" name="pregnancy_start_date"/>
+                          </div>
+                          <div class="form-group">
+                            <label class="form-label" style="color: #06871c;">Breeding Status</label>
+                            <select class="form-control " style="color: #605f5f;" name="pregnancy_status" required>
+                              <option>--select--</option>
+                              <option value="Processing">Processing</option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Failed">Failed</option>
+                          </select>
+                        </div>
+
+                        <div class="modal-footer">
+                          <input type="hidden" value="{{dt.id}}">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                        </div>
+
+                        </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                   
+                      <!--end of edit breeding-->
+
+                <!--Start delete breeding-->
+                <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-info" id="exampleModalLabel{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Delete Breeding</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                      <h5>Do you want to delete your data?</h5>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a href="{{url_for("delete_breeding",id = dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                  </div>
+                <!--End of delete breeding-->
+                </tr>
+                {% endfor %}
+
+                         
+                   
+            </tbody>
+       
+       
+          </table>
+
+
+        </div>
+
+        <!-- start modal hapus -->
+        <section class="content-header">
+            <div class="row mt-3">
+              <div class="col-lg-7">
+                <p style="color:  #4581bd;">showing <b><i>{{data.page}}</i></b> to <b><i>{{data.pages}}</i></b> of <b><i>{{data.pages}}</i></b> entries 
+                </div>
+              <div class="col-lg-5 justify-content-end">
+                <a  href="{{url_for("breeding", page=data.prev_num)}}" class="btn btn-primary  btn-sm 
+                {% if data.page == 1 %}disabled{% endif %}
+                ">
+                Prevous
+              </a>
+            {% for page_num  in data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            
+            {% if page_num %}
+                {% if data.page == page_num %}
+                  <a href="{{url_for("breeding", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                {% else %}
+                  <a href="{{url_for("breeding", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                {% endif %}
+            {% else %}
+            ...
+            {% endif %}
+            {% endfor %}
+              <a href="{{url_for("breeding", page=data.next_num)}}" class="btn btn-primary  btn-sm 
+              {% if data.page == data.pages %}disabled{% endif %} ">
+              Next
+            </a>
+              </div>
+            </div>
+          </section>
+          <!-- end  -->
+      
+    </div>
+    <!--End form card-->
+</div>
+</section>
+
+
+</section>
+<!--End Content-->
+
+{% endblock %}
+

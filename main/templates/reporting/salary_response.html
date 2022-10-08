@@ -1,0 +1,75 @@
+<link rel="stylesheet" href="{{url_for("static",filename="css/table_style.css")}}">
+
+
+<div class="row" style="text-align: end;">
+    <div class="col-10"></div>
+    <div class="col-2">
+    
+        <form action="{{url_for("salary_pdf")}}" method="post">
+            <input type="hidden" value="{{month}}" name="month">
+            <input type="hidden" value="{{year}}" name="year">
+            <input type="hidden" value="{{employee}}" name="employee">
+            <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-print text-white"></i></button>
+        </form>
+        <button class="btn btn-info mt-2 btn-sm" style="margin-top: 3px;" id="export"><i class="fa fa-file-excel-o text-white" aria-hidden="true"></i></button>
+        </div>
+    
+    </div>
+    </div>
+
+    <div class="row">
+
+        <div style="text-align: center;">
+            <div>
+                <img  src="{{url_for("static",filename="img/brand.png")}}" width="60">
+                <p>{{current_user.farmname}}</p>
+                <p>Employee Salary Report</p>
+                <p>Month: {{month}} Year: {{year}}</p>
+            </div>
+        </div>
+
+        <hr>
+   
+            <div class="box-body table-responsive">
+                <table class="table table-hover table-bordered">
+                <thead>
+                    <tr style="background: #d2d1d3;">
+                        <th>Pay Date</th>
+                        <th>Employee Name</th>
+                        <th style="text-align:start;">Contact Number</th>
+                        <th style="text-align:start;">Salary Amount</th>
+                        <th style="text-align:start;">Addition Amount</th>
+                        <th style="text-align:start;">Total Pay Amount</th>
+                    </tr>   
+                </thead>
+                <tbody>
+                    
+                  
+                    {% for dt in data %}
+                        <tr >
+                            <td>{{dt.pay_date}}</td>
+                            <td style="text-align:start;">{{dt.staff.fullname}}</td>
+                            <td>{{dt.staff.phone_number}}</td>
+                            <td style="text-align:start;">{{dt.salary_amount}}</td>
+                            <td style="text-align:start;">฿ {{dt.addition_amount}}</td>
+                            <td style="text-align:start;">{{dt.total}}</td>
+                            
+                        </tr>
+                    {% endfor %}
+                    
+               
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+  
+    
+    <script src="/static/js/table2excel.js"></script>
+    <script>
+      var table2excel = new Table2Excel();
+
+      document.getElementById('export').addEventListener('click', function() {
+        table2excel.export(document.querySelectorAll('table'));
+      });
+    </script>

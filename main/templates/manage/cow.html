@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true"> Cow List</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border" style="text-align: end;">
+        <a href="{{url_for("add_cow")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  New Cow </i></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <div class="box-body table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Image</th>
+                    <th>Gender</th>
+                    <th>Animal Type</th>
+                    <th>Buy Date</th>
+                    <th>Buying Price</th>
+                    <th>Pregnant Status</th>
+                    <th>Milk Per Day(LTR)</th>
+                    <th>Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for dt in data.items %}
+                <tr >
+                 <th class="btn btn-sm m-1" style="background: rgb(212, 209, 209);" scope="row">{{dt.cow_no}}</th>
+                 <td class="text-center"><img src="{{url_for("static", filename="/img/"+dt.cow_img)}}" style="width: 60px; height:45px; object-fit:fill; border: 2px solid rgb(17, 92, 184);" /></td>
+                 <td class="text-center">{{dt.gender}}</td>
+                 <td class="text-center">{{dt.animaltype.type_name}}</td>
+                 <td class="text-center">{{dt.buy_date}}</td>
+                 <td class="text-center">{{dt.buying_price}} $</td>
+                 {% if dt.pregnant_status == "Pregnant" %}
+                 <td><span class="label label-info">{{dt.pregnant_status}}</span></td>
+                 {% else %}
+                 <td><span class="label label-warning">{{dt.pregnant_status}}</span></td>
+                 {% endif %}
+                 <td class="text-center">{{dt.milk_per_day}} Lites</td>
+                 <td>
+
+                   <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{dt.id}}" 
+                   data-whatever=" Cow"><i class="fa fa-eye" aria-hidden="true"></i></button>
+
+                 <!-- start of modal -->
+                 <div class="modal fade" id="exampleModal{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                   <div class="modal-dialog ">
+                     <div class="modal-content">
+                       <div class="modal-header">
+                         <h5 class="modal-title text-primary" id="exampleModalLabel{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Cow Detail</h5>
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                       </div>
+                       <div class="modal-body">
+                         <table class="table  table-striped">
+                           <thead>
+
+                             <tr>
+                               <td scope="col">Stall No</td>
+                               <td scope="col">{{dt.stall.stall_number}}</td>
+                             </tr>
+                           </thead>
+                           <tbody>
+                             <tr>
+                               <td scope="col">Date of Birth</td>
+                               <td>{{dt.date_of_birth}}</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Animal Age (Days)</td>
+
+                               {% set dat1 = dt.date_of_birth %}
+                               {% set text1 = dat1.strftime("%Y,%m,%d") %}
+                               {% set d1 = text1.split(",") %}
+                               {% set dat2 = datetime.datetime.now() %}
+                               {% set text2 = dat2.strftime("%Y,%m,%d") %}
+                               {% set d2 = text2.split(",") %}
+                               {% set wid = d((d2[0]|int), (d2[1]|int), (d2[2]|int)) - d((d1[0]|int), (d1[1]|int), (d1[2]|int)) %}
+                               {% set wid1 = wid.days %}
+                               <td>{{wid1|int}} days</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Weight</td>
+                               <td>{{dt.weight}} Kg</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Height</td>
+                               <td>{{dt.height}} m</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Animal Type</td>
+                               <td>{{dt.animaltype.type_name}}</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Color</td>
+                               <td>{{dt.color}}</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Number of Pregnant</td>
+                               <td>{{dt.previous_pregnant}}</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Next Pregnancy Aprox Time</td>
+                               <td>{{dt.next_prenancy}}</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Buy Form</td>
+                               <td>{{dt.buy_from}}</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Previous Vaccine Done</td>
+                               <td>{{dt.previous_vaccine_done}}</td>
+                             </tr>
+                             <tr>
+                               <td scope="col">Note</td>
+                               <td>{{dt.note}}</td>
+                             </tr>
+
+                           </tbody>
+                         </table>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                
+                 <!-- end of modal -->
+                     <a href="{{url_for("edit_cow",id = dt.id)}}" class="btn btn-sm btn-primary"  ><i class="fa fa-pencil" aria-hidden="true"></i></a>
+
+                   <button class="btn btn-sm btn-danger" data-toggle="modal"  
+                     data-target="#exampleModal2{{dt.id}}" 
+                     data-whatever="User" ><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                       <!-- start modal hapus -->
+                       <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                         <div class="modal-dialog modal-dialog-centered">
+                         <div class="modal-content">
+                             <div class="modal-header">
+                             <h5 class="modal-title" id="exampleModalLabel">Delete Cow</h5>
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                             </div>
+                             <div class="modal-body">
+                            <h5>Do you want to delete your data?</h5>
+                            <div class="modal-footer">
+                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                             <a href="{{url_for("delete_cow",id = dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                             </div>
+                             </div>
+
+                         </div>
+                         </div>
+                     </div>
+                 <!-- end  -->
+                 </td>
+                
+             </tr>
+                {% endfor %}
+                
+            </tbody>
+       
+       
+          </table>
+
+
+        </div>
+
+       
+    </div>
+    <!--End form card-->
+</div>
+</section>
+
+
+</section>
+<!--End Content-->
+
+{% endblock %}
+

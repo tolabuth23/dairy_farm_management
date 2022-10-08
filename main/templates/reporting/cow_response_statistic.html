@@ -1,0 +1,247 @@
+<h4 class="text-center text-primary">Cow Detail</h4>
+<hr>
+<div class="row">
+    
+    <div class="col-lg-6">
+        <img src="{{url_for("static", filename="/img/"+data.cow_img)}}" 
+        class="img-thumbnail mt-3 "
+         style="width: 480px; height:350px; object-fit:fill ; border: 2px solid #ada4a4;"
+          alt="Cow Image"/>
+    </div>
+    <div class="col-lg-5 mt-3">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>Date of Birthday</td>
+                    <td>{{data.date_of_birth}}    
+                </tr>
+                <tr>
+                    <td>Animal Live Age</td>
+                    <td>{{data.animal_age}}    
+                </tr>
+                <tr>
+                    <td>Buy Time to Current</td>
+                    <td>{{data.buy_date}}    
+                </tr>
+                <tr>
+                    <td>Animal Gender</td>
+                    <td>{{data.gender}}    
+                </tr>
+                <tr>
+                    <td>Animal Type</td>
+                    <td>{{data.animaltype.type_name}}    
+                </tr>
+                <tr>
+                    <td>Pregnant Status</td>
+                    <td>{{data.pregnant_status}}</td>
+                </tr>
+                
+            </tbody/>
+        </table>
+    </div>
+    <div class="col-lg-1">
+    </div>
+
+
+  </div>
+
+<br>
+<h4 class="text-center text-info">Vaccine Done List</h4>
+<hr>
+<div class="row">
+   {% if getv  %}
+   <div class="box-body table-responsive">
+    <table class="table table-hover table-bordered">
+               <thead>
+                   <tr class="text-center" style="background-color: #bdbfbf;">
+                      
+                        <th>Date</th>
+                       <th style="text-align: start;">Vitamin Name</th>
+                       <th>Remark</th>
+                       <th>Given Time</th>
+                   <tr>
+                   </thead>
+               <tbody>
+                {% for dt in getv %}
+                   <tr style="color: #565050;">
+                       
+                        <td style="text-align: center;">{{dt.date}}</td>
+                       <td>{{dt.vaccinetype.vaccine_name}}</td>
+                       <td class="text-center">{{dt.remark}}</td>
+                       <td class="text-center">{{dt.time}}</td>
+                   </tr>
+                   {% endfor %}
+               </tbody>
+           </table> 
+          </div>  
+   {% else %}
+   <p class="text-center text-danger">This cow not yet get vaccine!!!!</p>
+   {% endif %}
+</div>
+
+<br>
+<h4 class="text-center text-info">Pregnant Report List</h4>
+<hr>
+
+<div class="row m-1">
+   
+  <div class="box-body table-responsive">
+    <table class="table table-hover table-bordered">
+                <thead>
+                    <tr class="text-center" style="background-color: #bdbfbf;">
+                        <th>Pregnancy Type</th>
+                        <th>Semen Type</th>
+                        <th>Semon Push Date</th>
+                        <th>Pregnant Start Date</th>
+                        <th>Pregnancy Status</th>
+                        <th>Action</th>
+                    <tr>
+                    </thead>
+                <tbody>
+                    {% for dt in pre %}
+                        <tr class="text-center">
+                           
+                            <td>{{dt.pregnancy_type}}</td>
+                            <td>{{dt.animaltype.type_name}}</td>
+                            <td>{{dt.semen_push_date}}</td>
+                            <td>{{dt.pregnancy_start_date}}</td>
+                            <td>{{dt.pregnancy_status}}</td>
+                            <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{dt.id}}" 
+                                data-whatever=" Cow"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                          
+                           <!-- start of modal -->
+                           <div class="modal fade" id="exampleModal{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 style="text-align: start;" class="modal-title text-primary" id="exampleModalLabel{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Breeding Detail</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span></button>
+                                </div>
+
+                                <div class="modal-body">
+                                  <div class="box-body table-responsive">
+                                    <table class="table table-hover table-bordered">
+                                    <tbody>
+                                        <tr >
+                                            <td scope="col" style="text-align: start;">Semen Cost</td>
+                                            <td scope="col"style="text-align: start;" >{{dt.semen_cost}}</td>
+                                          </tr>
+                                          <tr >
+                                            <td scope="col" style="text-align: start;">Note</td>
+                                            <td scope="col" style="text-align: start;">{{dt.note}}</td>
+                                          </tr>
+                                          <tr  >
+                                            <td scope="col" style="text-align: start;">Approximate Delivery Date: </td>
+                                            <td style="text-align: start;">{{dt.pregnancy_start_date + dat}}</td>
+                                          </tr>
+                                          <tr >
+                                            <td style="text-align: start;" width="50%">Pregnancy Progress :</td>
+                                            <td style="text-align: start;" width="50%">
+                                              <div class="progress" style="height:20px">
+                                                {% set dat1 = dt.pregnancy_start_date %}
+                                                {% set text1 = dat1.strftime("%Y,%m,%d") %}
+                                                {% set d1 = text1.split(",") %}
+                                                {% set dat2 = datetime.datetime.now() %}
+                                                {% set text2 = dat2.strftime("%Y,%m,%d") %}
+                                                {% set d2 = text2.split(",") %}
+                                                {% set wid = d((d2[0]|int), (d2[1]|int), (d2[2]|int)) - d((d1[0]|int), (d1[1]|int), (d1[2]|int)) %}
+                                                {% set wid1 = wid.days %}
+                                                {% set wids = wid1|int - 1 %}
+                                                {% set wid3 = wids|int /279 %}
+                                                {% set wid4 = wid3* 99 + 1 %}
+                                                <div class="progress-bar" style="width:{{wid4|int}}%;height:20px">
+                                                  <span class="progress-meter-text">{{wid1|int}} day</span>
+                                                </div> 
+                                              </div>
+                                            </td>
+                                          </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- end of modal -->
+                        </td>
+                        </tr>
+                    {% endfor %}
+               
+                </tbody>
+            </table>   
+          </div>
+ </div>
+
+
+<br>
+<h4 class="text-center text-info">Calf Record List</h4>
+<hr>
+
+<div class="row m-1">
+   
+  <div class="box-body table-responsive">
+    <table class="table table-hover table-bordered">
+                <thead>
+                    <tr class="text-center" style="background-color: #bdbfbf;">
+                        <th>Stall No</th>
+                        <th>Animal Type</th>
+                        <th>Gender</th>
+                        <th>Date of Birthday</th>
+                        <th>Current Age</th>
+                        <th>Weigth(Kg)</th>
+                        <th>Height(M)</th>
+                        
+                        <th>Action</th>
+                    <tr>
+                    </thead>
+                <tbody>
+                    {% for dt in calf %}
+                        <tr class="text-center">
+                           
+                            <td>{{dt.stall_no}}</td>
+                            <td>{{dt.animaltype.type_name}}</td>
+                            <td>{{dt.gender}}</td>
+                            <td>{{dt.date_of_birth}}</td>
+                            {% set dat1 = dt.date_of_birth %}
+                            {% set text1 = dat1.strftime("%Y,%m,%d") %}
+                            {% set d1 = text1.split(",") %}
+                            {% set dat2 = datetime.datetime.now() %}
+                            {% set text2 = dat2.strftime("%Y,%m,%d") %}
+                            {% set d2 = text2.split(",") %}
+                            {% set age = d((d2[0]|int), (d2[1]|int), (d2[2]|int)) - d((d1[0]|int), (d1[1]|int), (d1[2]|int)) %}
+                            {% set age1 = age.days %}
+                            <td>{{age1|int}}</td>
+                            <td>{{dt.weight}}</td>
+                            <td>{{dt.height}}</td>
+                          
+                            <td><button class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal1{{dt.id}}" 
+                                data-whatever=" Cow"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                          
+                           <!-- start of modal -->
+                           <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 style="text-align: start;" class="modal-title text-primary" id="exampleModalLabel1{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Calf Detail</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <img style="width: 300px; height:250px; object-fit:fill; border: 2px solid rgb(17, 92, 184);"  src="{{url_for("static", filename="/img/"+dt.calf_img)}}" style="width: 38px;" /></td>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- end of modal -->
+                        </td>
+                        </tr>
+                    {% endfor %}
+               
+                </tbody>
+            </table> 
+          </div>  
+    
+ </div>

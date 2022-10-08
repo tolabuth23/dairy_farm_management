@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-eyedropper text-primary" aria-hidden="true">  Cow Breeding Monitoring</i></h1>
+</section>
+<!--Start content-->
+<form action="{{add_breeding}}" method="post">
+<section class="content-header">
+<div class="box box-primary">
+    <div class="box-header with-border" style="text-align: end;" >
+        <button type="submit" class="btn  btn-primary"  ><i class="fa fa-bookmark-o" aria-hidden="true">  Save Breeding</i></button>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+      
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title text-primary"><i class="fa fa-tint" aria-hidden="true">  Animal Information</i></h3>
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding">
+              
+                <div class="row">
+                    <div class="col-md-6">  
+                       <div class="form-group">
+                            <label>Stall No</label>
+                            <select class="form-control form-control-lg" name="stall_id" aria-label="Default select example" id="search_stall_id">
+                                <option selected>--select--</option>
+                                {% for dt in stall %}
+                                    <option value="{{dt.id}}">{{dt.stall_number}}</option>
+                                {% endfor %}
+                            </select>
+                       </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Cow ID</label>
+                            {% if datas %}
+                            <div class="form-group" >
+                                <select id="show_sub_categories" name="cow_id" required  class="form-control search_cow_id">
+                                    <option value="" selected="selected">--select--</option>
+                                 </select>
+                            </div>
+                            {% else %}
+                            <div class="form-group" >
+                              <select id="show_sub_categories" name="cow_id" class="form-control search_cow_id">
+                                  <option value="" selected="selected">--select--</option>
+                               </select>
+                            </div>
+                            {% endif %}
+                       </div>
+                    </div>
+
+                </div>
+                
+                <!--Show cow Information-->
+                <div id="show_cow_info" style="margin-bottom: 10px;">
+                    
+                </div>
+               
+                <!--End of Cow Information-->
+
+
+
+         
+
+
+            </div>
+            
+        </div>
+
+        
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title text-primary"><i class="fa fa-exclamation-triangle" aria-hidden="true"> Breeding Information</i></h3>
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Breeding Type</label>
+                            <select class="form-control" name="pregnancy_type" required>
+                                <option>--select--</option>
+                                <option value="Automatic">Automatic</option>
+                                <option value="By Collected Semen">By Collected Semen</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Semen Push Date</label>
+                            <input type="date" class="form-control" name="semen_push_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pregnancy Status</label>
+                            <select class="form-control" name="pregnancy_status" required>
+                                <option>--select--</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Failed">Failed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label >Semen Type</label>
+                            <select class="form-control" name="semen_type" required>
+                                <option>--select--</option>
+                                {% for dt in antype %}
+                                    <option value="{{dt.id}}">{{dt.type_name}}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Semen Cost</label>
+                            <input type="number" class="form-control" name="semen_cost" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Note</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="1" name="note" ></textarea>
+                        </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+    <!--End form card-->
+</div>
+</section>
+</form>
+</section>
+<!--End Content-->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#search_stall_id').change(function(){
+        $.post("/get_animal_vaccine", {
+        parent_id: $('#search_stall_id').val(),
+        }, function(response){ 
+            $('#show_sub_categories').html(response);
+            $('#show_sub_categories').append(response.htmlresponse);
+        });
+        return false;
+      });
+
+      $('.search_cow_id').change(function(){
+        $.post("/get_cow_breeding", {
+          parent_id: $('.search_cow_id').val(),
+        }, function(response){
+          $('#show_cow_info').html(response);
+          $('#show_cow_info').append(response.htmlresponse)
+        });
+        return false;
+        });
+    
+     
+      });
+  </script>
+{% endblock %}
+

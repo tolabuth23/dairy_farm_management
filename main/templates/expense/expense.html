@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true"> Farm Expense List</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border" style="text-align: end;">
+        
+        <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#exampleModal" 
+        data-bs-whatever="Branch"><i class="fa fa-plus-circle" aria-hidden="true">  Add Expense </i></button>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <div class="box-body table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th width="10%" >No</th>
+                    <th width="20%">Date</th>
+                    <th width="20%">Purpose Name</th>
+                    <th width="20%">Details</th>
+                    <th width="20%">Total Amount</th>
+                    <th width="20%">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dt in data %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{dt.date}}</th>
+                    <td>{{dt.purposes}}</td>
+                    <td>{{dt.detail}}</td>
+                    <td>{{dt.total_amount}} Baht</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#exampleModal1{{dt.id}}" 
+                        data-bs-whatever="Branch"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                        <a  data-toggle="modal"  
+                        data-target="#exampleModal2{{dt.id}}" 
+                        data-bs-whatever="User" href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                    </td>
+                    </tr>
+
+                            <!-- start of delete  -->
+                            <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title text-primary"><i class="fa fa-trash-o" aria-hidden="true"></i>  Delete Expense </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                <h5>Do you want to delete your data?</h5>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a href="{{url_for("delete_expense", id= dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                                    </div>
+                                    </div>
+
+                                    
+                                </div>
+                                </div>
+                            </div>
+                            <!-- end of delete -->
+
+                    <!-- start of Add Expense -->
+                    <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-info" id="exampleModalLabel{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Edit Expense</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span></button>
+                          
+                            </div>
+                            <div class="modal-body">
+                            <form action="{{url_for("edit_expense",id = dt.id)}}" id="tbexpense"  method="POST">
+                                <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Date</label>
+                                <input type="Date" class="form-control" value="{{dt.date}}" name="date" id="date">
+                                </div>
+                                <div class="form-group">
+                                    <label for="purpose_name" class="form-control-label">Purpose Name</label>
+                                    <input type="text" class="form-control" name="purpose_name" value="{{dt.purposes}}">
+                                </div>
+                                <div class="form-group">
+                                <label for="message-text" class="col-form-label">Details</label>
+                                <textarea class="form-control" name="detail" id="message-text">{{dt.detail}}</textarea>
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Total Amount</label>
+                                    <input type="number" class="form-control" value="{{dt.total_amount}}" name="total_amount" id="recipient-name">
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                                </form>
+                            </div>
+
+                        
+                        </div>
+                        </div>
+                    </div>
+                    <!-- end modal -->
+
+
+
+                {% endfor %}
+            </tbody>
+       
+       
+          </table>
+
+
+        </div>
+
+       
+    </div>
+    <!--End form card-->
+</div>
+</section>
+
+
+</section>
+<!--End Content-->
+  <!-- start of Add Expense -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-info" id="exampleModalLabel"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Edit Expense</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+      
+        </div>
+        <div class="modal-body">
+        <form action="{{url_for("add_expense")}}" id="tbexpense"  method="POST">
+            <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Date</label>
+            <input type="datetime-local" class="form-control" name="date" id="date">
+            </div>
+            <div class="form-group">
+                <label for="purpose_name" class="form-control-label">Purpose Name</label>
+                <input type="text" class="form-control" name="purpose_name">
+              
+            </div>
+            <div class="form-group">
+            <label for="message-text" class="col-form-label">Details</label>
+            <textarea class="form-control" name="detail" id="message-text"></textarea>
+            </div>
+        
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Total Amount</label>
+                <input type="number" class="form-control"  name="total_amount" id="recipient-name">
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            </form>
+        </div>
+
+    
+    </div>
+    </div>
+</div>
+<!-- end modal -->
+{% endblock %}
+

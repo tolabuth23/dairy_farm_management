@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true">  Cow Feed List</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border" style="text-align: end;">
+        <a href="{{url_for("add_feed")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  Add Milk</i></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <div class="box-body table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th width="10%">No</th>
+                    <th width="20%">Date</th>
+                    <th width="25%">Stall No</th>
+                    <th width="30%">Note</th>
+                    <th width="15">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for dt in data %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{dt.datefrom}} To   {{dt.dateto}}</td>
+                <td>{{dt.stall_no}}</td>
+                <td>{{dt.note}}</td>
+                <td>
+                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{dt.id}}" 
+                    data-bs-whatever=" Cow"><i class="fa fa-eye" aria-hidden="true"></i></button>
+
+
+                     <!-- start of modal -->
+                     <div class="modal fade" id="exampleModal{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title text-primary"><i class="fa fa-joomla" aria-hidden="true"></i>  {{dt.stall_no}}</h4>
+                            </div>
+                            <div class="modal-body">
+                              <div class="box-body table-responsive">
+                                <table class="table table-hover table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Food Item</th>
+                                    <th scope="col">Item Quantity</th>
+                                    <th scope="col">Feeding Time</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    {% for d,i in enumerate(dt.feed_item) %}
+                                    <tr>
+                                       <td>{{i}}</td>
+                                       <td>{{dt.item_quantity[d]}} {{dt.unit[d]}}</td>
+                                       <td>{{dt.feeding_time[d]}}</td>
+                                   </tr>
+                                    {% endfor %}
+                                </tbody>
+                              </table>
+                            </div>
+                          
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                      <!-- end of modal -->  
+                    <!--Start Edit of modal-->
+                    <a href="{{url_for("edit_feed", id = dt.id)}}" class="btn btn-primary btn-sm" type="button"><i class='bx bxs-pencil text-white'></i></a>
+                    <!--End of Edit of modal-->
+                    <a  data-toggle="modal"  
+                    data-target="#exampleModal2{{dt.id}}" 
+                    data-bs-whatever="User" href="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+            
+                 <!-- start of delete  -->
+                 <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title text-primary"><i class="fa fa-trash-o" aria-hidden="true"></i>  Delete Feed {{dt.stall_no}}</h4>
+                        </div>
+                        <div class="modal-body">
+                       <h5>Do you want to delete your data?</h5>
+                       <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a href="{{url_for("delete_feed", id= dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                        </div>
+                        </div>
+
+                        
+                    </div>
+                    </div>
+                </div>
+                <!-- end of delete -->
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+
+
+               
+
+    </div>
+    <!--End form card-->
+</div>
+</section>
+</section>
+<!--End Content-->
+
+{% endblock %}
+

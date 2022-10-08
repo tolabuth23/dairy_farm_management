@@ -1,0 +1,45 @@
+<h4 class="text-center text-primary">Cow Detail</h4>
+<hr>
+<div class="row">
+    
+    <div class="col-lg-6">
+        <img src="{{url_for("static", filename="/img/"+data.cow_img)}}" 
+        class="img-thumbnail mt-3 "
+         style="width: 480px; height:350px; object-fit:fill ; border: 2px solid #ada4a4;"
+          alt="Cow Image"/>
+    </div>
+    <div class="col-lg-5 mt-3">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>Date of Birthday</th>
+                    <th>{{data.date_of_birth}}    
+                </tr>
+                <tr>
+                    <th>Animal Live Age</th>
+                    <th>{{data.animal_age}}    
+                </tr>
+                <tr>
+                    <th>Buy Time to Current</th>
+                    <th>{{data.buy_date}}    
+                </tr>
+                <tr>
+                    <th>Animal Gender</th>
+                    <th>{{data.gender}}    
+                </tr>
+                <tr>
+                    <th>Animal Type</th>
+                    <th>{{data.animaltype.type_name}}    
+                </tr>
+                <tr>
+                    <th>Breeding Status</th>
+                    <th class="text-primary "><i>{{data.pregnant_status}}</i></th>
+                </tr>
+                
+            </tbody/>
+        </table>
+    </div>
+    <div class="col-lg-1">
+        
+    </div>
+</div>

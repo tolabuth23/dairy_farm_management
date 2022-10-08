@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true">Office Expense Report By Date</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border">
+        <a ><h4><i class="fa fa-plus-circle" aria-hidden="true">  Date Rate </i></h4></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+      
+       <div class="row">
+        <div class="col-md-4">
+            <input type="date" id="date_from" class="form-control" name="date_from" placeholder="Select Your Date From"></input>
+        </div>
+        <div class="col-md-4">
+            <input type="date" id="date_to" class="form-control" name="date_to" placeholder="Select Your Date To"></input>
+        </div>
+        <div class="col-md-4">
+            <button id="office_expense" type="submit" class="btn btn-info " style="width:100%;"><i class='bx bx-search-alt-2'></i> Search</div>
+        </div>
+
+        <hr class="m-4">
+        <div class="col-md-12">
+        <div id="show_expense">
+
+        </div>
+        </div>
+
+
+       </div>
+     
+       
+      
+    </div>
+    <!--End form card-->
+</div>
+</section>
+
+
+</section>
+<!--End Content-->
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#office_expense').click(function(){
+        $.post("/get_expense_report", {
+        date_from: $('#date_from').val(),
+        date_to : $('#date_to').val()
+        }, function(response){ 
+            $('#show_expense').html(response);
+            $('#show_expense').append(response.htmlresponse);
+        });
+        return false;
+    })
+      });
+      
+  </script>
+{% endblock %}
+

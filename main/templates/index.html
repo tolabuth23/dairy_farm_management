@@ -1,0 +1,465 @@
+{% extends 'base.html' %}
+{% block content %}
+
+ 
+<section class="content">
+<section class="content-header">
+  <h1><i class="fa fa-cubes text-primary"> Dashboard</i> </h1>
+</section>
+<section class="content-header">
+  <div class="row">
+      <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><img  width='90%' src="{{url_for("static",filename="img/staff.png")}}"></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total Staff</span>
+                <span class="info-box-number">{{staff}} Person</span>
+            </div>
+          </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-green"><img src="{{url_for("static",filename="img/cow.png")}}"></span>
+        <div class="info-box-content">
+          <span class="info-box-text">Total Cow</span>
+          <span class="info-box-number">{{cow}} Cow</span>
+        </div>
+      </div>  
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="info-box">
+        <span class="info-box-icon bg-yellow"><img src="{{url_for("static",filename="img/calf.png")}}"></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Total Calf</span>
+        <span class="info-box-number">{{calf}} Calf</span>
+      </div>
+    </div>  
+  </div>
+
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-red"><img width='70%' src="{{url_for("static",filename="img/supplier.png")}}"></span>
+    <div class="info-box-content">
+      <span class="info-box-text">Total Supplier</span>
+      <span class="info-box-number">{{supplier}} Supplier</span>
+    </div>
+  </div>  
+</div>
+    
+  </div>
+
+
+
+<div class="row">
+
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-aqua"><img  width='90%' src="{{url_for("static",filename="img/stall.png")}}"></span>
+      <div class="info-box-content">
+          <span class="info-box-text">Total Cow Stall</span>
+          <span class="info-box-number">{{total_cow_stall}} cow</span>
+      </div>
+    </div>
+</div>
+
+  <div class="col-md-3 col-sm-6 col-xs-12">
+      <div class="info-box">
+        <span class="info-box-icon bg-aqua"><img  width='90%' src="{{url_for("static",filename="img/expense.png")}}"></span>
+        <div class="info-box-content">
+            <span class="info-box-text">Today Expense</span>
+            {% if expense %}
+            <span class="info-box-number">฿ {{expense}}</span>
+            {% else %}
+            <span class="info-box-number">฿ 0</span>
+            {% endif %}
+           
+        </div>
+      </div>
+  </div>
+
+  <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-green"><img width='90%' src="{{url_for("static",filename="img/milk.png")}}"></span>
+    <div class="info-box-content">
+      <span class="info-box-text">Today Collect Milk</span>
+     
+      {% if milk %}
+      <span class="info-box-number">{{milk}} Lite</span>
+      {% else %}
+      <span class="info-box-number">0 Lite</span>
+      {% endif %}
+    </div>
+  </div>  
+</div>
+
+
+<div class="col-md-3 col-sm-6 col-xs-12">
+<div class="info-box">
+  <span class="info-box-icon bg-red"><img width='70%' src="{{url_for("static",filename="img/sale.png")}}"></span>
+<div class="info-box-content">
+  <span class="info-box-text">Today Sale Milk</span>
+
+  {% if sale_milk %}
+  <span class="info-box-number">฿ {{sale_milk}}</span>
+    {% else %}
+    <span class="info-box-number">฿ 0</span>
+    {% endif %}
+</div>
+</div>  
+</div>
+
+</div>
+
+
+<div class="row m-2">
+  <div class="col-md-6">
+    <div class="box box-danger">
+      <div class="box-header">
+        <span><i class="fa fa-bar-chart" aria-hidden="true"></i>  Monthly Milk Sale  Chart</span>
+      </div>
+        <div class="box-body">
+            <canvas id="myChart3" width="50px;" height="50px;"></canvas>
+          
+        </div>
+    </div>
+   </div>
+
+     <div class="col-md-6">
+      <div class="box box-danger">
+          <div class="box-body">
+            <canvas id="myCharts" width="50" height="50"></canvas>
+        
+              </canvas>
+          </div>
+      </div>
+     </div>
+</div>
+
+
+<div class="row m-2">
+  
+
+     <div class="col-md-6">
+      <div class="box box-danger">
+        <div class="box-header">
+          <span><i class="fa fa-bar-chart" aria-hidden="true"></i>  Weekly Expense Farm  Chart</span>
+        </div>
+          <div class="box-body">
+              <canvas id="myChart4" width="50px;" height="50px;"></canvas>
+             
+      
+          </div>
+      </div>
+     </div>
+     
+</div>
+
+
+</section>
+
+</section>
+     
+
+    
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script>
+  // setup 
+  const dates = [{% for dt in ds %}"{{dt}}",{% endfor %}]
+  const datapoints = [{% for dt in ex %} "{{dt.total_amount}}",  {% endfor %}]; 
+  const convertedDates = dates.map(date => new Date(date).setHours(0,0,0,0));
+  console.log(convertedDates)
+  const data = {
+    labels: dates,
+    datasets: [{
+      label: 'Weekly Expense',
+      data: datapoints,
+      backgroundColor: [
+        'rgba(255, 26, 104, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(0, 0, 0, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255, 26, 104, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(0, 0, 0, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  // config 
+  const config = {
+    type: 'bar',
+    data,
+    options: {
+      scales: {
+      x: {
+          type: 'time',
+          time: {
+              unit: 'day'
+          }
+      },
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  // render init block
+  const myChart = new Chart(
+    document.getElementById('myChart4'),
+    config
+  );
+  function filterDate(){
+      //(new Date('2022-10-01 00:00:00 GMT+0800'))
+      const start1 = new Date(document.getElementById("start").value);
+      const start = start1.setHours(0,0,0,0);
+      const end1 = new Date(document.getElementById("end").value);
+      const end = end1.setHours(0,0,0,0);
+
+      const  filterDates = convertedDates.filter(date => date >= start && date <=end )
+      myChart.config.data.labels = filterDates;
+      //working on the data 
+      const startArray = convertedDates.indexOf(filterDates[0]);
+      const endArray = convertedDates.indexOf(filterDates[filterDates.lenght-1]);
+      console.log(startArray)
+      console.log(endArray);
+      const copydatapoints = [...datapoints];
+      copydatapoints.splice(endArray + 1 , filterDates.lenght);
+      copydatapoints.splice(0, startArray)
+      console.log(copydatapoints)
+      myChart.config.data.datasets[0].data =copydatapoints;
+      myChart.update();
+
+  }
+  function resetDate(){
+      myChart.config.data.labels = convertedDates;
+      myChart.config.data.datasets[0].data = datapoints;
+      myChart.update();
+  }
+  </script>
+
+
+
+
+<script >
+  const ctx = document.getElementById('myChart').getContext('2d');
+
+  const myChart = new Chart(ctx,{
+  type: 'line',
+  data: {
+      labels: [{% for dt in dates %}"{{dt}}",{% endfor %}],
+      datasets: [{
+          label: '# Total Expense in Farm (฿)',
+          data: [{% for dt in da %}{{dt}},{% endfor %}],
+          backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+      scales: {
+          y: {
+              beginAtZero: true
+          }
+      }
+  }
+});
+</script>
+
+<script >
+  const ctxs = document.getElementById('myCharts').getContext('2d');
+
+  const myCharts = new Chart(ctxs,{
+  type: 'line',
+  data: {
+      labels: [{% for dt in dates1 %}"{{dt}}",{% endfor %}],
+      datasets: [{
+          label: '# Total of Milk (Lite)',
+          data: [{% for dt in charts %}{{dt}},{% endfor %}],
+          backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+      scales: {
+          y: {
+              beginAtZero: true
+          }
+      }
+  }
+});
+</script>
+
+<script >
+  const ctx3 = document.getElementById('myChart3').getContext('2d');
+
+  const myChart3 = new Chart(ctx3,{
+  type: 'bar',
+  data: {
+      labels: [{% for dt in date3 %}"{{dt}}",{% endfor %}],
+      datasets: [{
+          label: '# Total Milk Sale (฿)',
+          data: [{% for dt in chart3 %}{{dt}},{% endfor %}],
+          backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+      scales: {
+          y: {
+              beginAtZero: true
+          }
+      }
+  }
+});
+</script>
+{% endblock %}
+
+
+<script>
+  // setup 
+  const dates = [{% for dt in date3 %}"{{dt}}",{% endfor %}]
+  const datapoints = [{% for dt in chart3 %}{{dt}},{% endfor %}]; 
+  const convertedDates = dates.map(date => new Date(date).setHours(0,0,0,0));
+  console.log(convertedDates)
+  const data = {
+    labels: dates,
+    datasets: [{
+      label: 'Weekly Expense',
+      data: datapoints,
+      backgroundColor: [
+        'rgba(255, 26, 104, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(0, 0, 0, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255, 26, 104, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(0, 0, 0, 1)'
+      ],
+      borderWidth: 1
+    }]
+  };
+
+  // config 
+  const config = {
+    type: 'bar',
+    data,
+    options: {
+      scales: {
+      x: {
+          type: 'time',
+          time: {
+              unit: 'day'
+          }
+      },
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  // render init block
+  const myChart = new Chart(
+    document.getElementById('myChart3'),
+    config
+  );
+  function filterDate(){
+      //(new Date('2022-10-01 00:00:00 GMT+0800'))
+      const start1 = new Date(document.getElementById("start").value);
+      const start = start1.setHours(0,0,0,0);
+      const end1 = new Date(document.getElementById("end").value);
+      const end = end1.setHours(0,0,0,0);
+
+      const  filterDates = convertedDates.filter(date => date >= start && date <=end )
+      myChart.config.data.labels = filterDates;
+      //working on the data 
+      const startArray = convertedDates.indexOf(filterDates[0]);
+      const endArray = convertedDates.indexOf(filterDates[filterDates.lenght-1]);
+      console.log(startArray)
+      console.log(endArray);
+      const copydatapoints = [...datapoints];
+      copydatapoints.splice(endArray + 1 , filterDates.lenght);
+      copydatapoints.splice(0, startArray)
+      console.log(copydatapoints)
+      myChart.config.data.datasets[0].data =copydatapoints;
+      myChart.update();
+
+  }
+  function resetDate(){
+      myChart.config.data.labels = convertedDates;
+      myChart.config.data.datasets[0].data = datapoints;
+      myChart.update();
+  }
+  </script>
+

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Get PDF</title>
+</head>
+
+<body>
+      
+<br><br><br>
+<div class="card">
+    <div class="card-body">
+       
+        <div style="text-align: center;">
+            <div>
+               
+                <h4 class="text-primary">{{current_user.farmname}}</h4>
+                <h6 class="text-primary">Milk Sale Report</h6>
+                <p>From Date: {{date_from}} - {{date_to}}</p>
+            </div>
+        </div>
+
+
+        <div class="">
+            <table class="table table-bordered table-sm">
+                <thead>
+                    <tr style="background: #d2d1d3;">
+                        <th>No</th>
+                        <th>Date</th>
+                        <th style="text-align:start;">Sale No</th>
+                        <th style="text-align:start;">Supplier Name</th>
+                        <th style="text-align:start;">Contact</th>
+                        <th style="text-align:start;">Lite</th>
+                        <th>Cost/Lite</th>
+                        <th>Total Price</th>
+                    </tr>   
+                </thead>
+                <tbody>
+                   {% for dt in data %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{dt.date}}</td>
+                        <td>{{dt.sale_no}}</td>
+                        <td>{{dt.supplier_name}}</td>
+                        <td>{{dt.contact}}</td>
+                        <td>{{dt.lite}}</td>
+                        <td>{{dt.price}}</td>
+                        <td>{{dt.total}}</td>
+
+                    </tr>
+                   {% endfor %}
+                    
+               <tr style="background: #d2d1d3; color: blue;">
+                    <td colspan="7" style="text-align: end;">Total: </td>
+                    <td>฿ {{totalprice|float}}</td>
+                    
+
+               </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+</body>
+
+</html>

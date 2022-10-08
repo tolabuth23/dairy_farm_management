@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-gg-circle text-primary" aria-hidden="true">  Product Milk</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    
+    <!--Start form card -->
+    <div class="box-body">
+        <!--Start row form-->
+        <div class="box-body table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                      <th style="width:10%">Date</th>
+                      <th style="width:30%">Total Milk</th>
+                      <th style="width:30%">Saled Milk</th>
+                      <th style="width:20%">Remain Milk</th>
+                      <th style="width:10%">Status</th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+                 <tr>
+                    <td class="text-primary">{{cmilk}}</td>
+                    <td class="text-info">{{datas}} Lite</td>
+                    <td class="text-danger">{{saled}} Lite</td>
+                    {% set remain = datas - saled %}
+                    <td class="text-secondary">{{remain}} Lite</td>
+                    {% if datas == saled %}
+                    <td class="text-center"><input type="button" class="btn btn-danger btn-sm" value="Sold"></td>
+                    {% else %}
+                    <td class="text-center"><input type="button" class="btn btn-primary btn-sm" value="Avariable"></td>
+                    {% endif %}
+                 </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-left: 10px;">
+          {% if datas == saled %}
+          <th class="text-center">
+               
+            <button class="btn btn-sm btn-primary" disabled  data-toggle="modal"  
+            data-target="#exampleModal" 
+            data-whatever="User" >Sale Milk</button>
+          </th>
+          {% else %}
+          <th class="text-center">
+               
+            <button class="btn btn-sm btn-primary"  data-toggle="modal"  
+            data-target="#exampleModal" 
+            data-bs-whatever="User" >Sale Milk</button>
+          </th>
+          {% endif %}
+        </div>
+        <!--End of Form-->
+        <hr class="m-3">
+        <h4 class="m-2"><i class="fa fa-btc text-primary" aria-hidden="true"> Sale Milk List</i></h4>
+        <div class="box-body table-responsive">
+          <table class="table table-hover table-bordered">
+              <thead>
+                  <tr>
+                    <th style="width:5%">No</th>
+                    <th style="width:10%">Date</th>
+                    <th style="width:10%">Sale No</th>
+                    <th style="width:15%">Supplier Name</th>
+                    <th style="width:10%">Contact</th>
+                    <th style="width:15%">Email</th>
+                    <th style="width:5%">Lite(L)</th>
+                    <th style="width:10%">Total Price(฿)</th>
+                    <th style="width:10%">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for dt in data.items %}
+                <tr >
+                  <td class="text-center">{{loop.index}}</td>
+                  <td>{{dt.date}}</td>
+                  <td>{{dt.sale_no}}</td>
+                  <td>{{dt.supplier_name}}</td>
+                  <td>{{dt.contact}}</td>
+                  <td>{{dt.email}}</td>
+                  <td>{{dt.lite}}</td>
+                  <td>{{dt.total}}</td>
+                  <td>
+                    <a class="btn btn-info btn-sm" href="{{url_for("order",id=dt.id)}}"
+      
+                    ><i class='bx bx-printer'></i> </a>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{dt.id}}" 
+                    data-bs-whatever=" Cow"><i class="fa fa-trash-o"></i></button>
+                  </td>      
+                    <!-- start of delete  -->
+                    <div class="modal fade" id="exampleModal{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                          <h5 class="modal-title text-primary" id="exampleModalLabel"><i class="bi bi-chat-text-fill"></i> Delete Collect Milk</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                        <h5>Do you want to delete your data?</h5>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <a href="{{url_for("delete_smilk",id = dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                          </div>
+                          </div>
+                      </div>
+                      </div>
+                    </div>
+                    <!-- end of delete -->
+                </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+                  <!--Start of row pagination-->
+
+                <div class="row mt-3">
+                  <div class="col-lg-7">
+                      <p style="color:  #4581bd;">showing <b><i>{{data.page}}</i></b> to <b><i>{{data.pages}}</i></b> of <b><i>{{data.pages}}</i></b> entries 
+                  </div>
+                  <div class="col-lg-5 justify-content-end">
+                      <a  href="{{url_for("sale_milk", page=data.prev_num)}}" class="btn btn-primary  btn-sm 
+                      {% if data.page == 1 %}disabled{% endif %}
+                      ">
+                      Prevous
+                  </a>
+                  {% for page_num  in data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                  
+                  {% if page_num %}
+                      {% if data.page == page_num %}
+                      <a href="{{url_for("sale_milk", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                      {% else %}
+                      <a href="{{url_for("sale_milk", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+                      {% endif %}
+                  {% else %}
+                  ...
+                  {% endif %}
+                  {% endfor %}
+                  <a href="{{url_for("sale_milk", page=data.next_num)}}" class="btn btn-primary  btn-sm 
+                  {% if data.page == data.pages %}disabled{% endif %} ">
+                  Next
+                  </a>
+                  </div>
+              </div>
+              <!--End of row pagination-->  
+
+
+    </div>
+    <!--End form card-->
+ 
+</div>
+</section>
+
+</section>
+<!--End Content-->
+
+
+       <!--start alert of add collect  -->
+       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " >
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-primary"><i class="fa fa-trash-o" aria-hidden="true"></i>  New Sale Milk</h4>
+            </div>
+            <div class="modal-body">
+              <form action="{{url_for("new_smilk")}}" method = "post">
+                <div class="form-group">
+                  <label>Sale No</label>
+                  <input type="text" class="form-control" name="sale_no" id="sale_no" placeholder="Sale No" value="{{sale_no}}">
+                </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Lite</label>
+                        {% set remain = datas - saled %}
+                        <input type="number" class="form-control" min="0" max="{{remain}}" name="lite" id="lite" placeholder="Lite">
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Price/Lite</label>
+                        <input type="number" class="form-control" name="price" id="price" placeholder="Price/Lite">
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Total Price</label>
+                    <input type="number" class="form-control" name="total" id="total">
+                  </div>
+                  <div class="form-group">
+                    <label>Supplier Name</label>
+                    <select class="form-control form-select-sm" name="supplier_name" id="supplier_id">
+                      <option  selected>--select--</option>
+                      {% for dt in suppliers %}
+                         <option value="{{dt.supplier_name}}">{{dt.supplier_name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div id="show_supplier">
+
+                  </div>
+             
+              <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button href="" type="submit" class="btn btn-primary">save</button>
+               </div>
+              </form>
+               </div>
+
+          </div>
+        </div>
+      </div>
+     
+<!-- end of alert collect milk -->
+
+
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $('#supplier_id').change(function(){
+        $.post("/get_account_info", {
+        parent_id: $('#supplier_id').val(),
+        }, function(response){ 
+            $('#show_supplier').html(response);
+            $('#show_supplier').append(response.htmlresponse);
+        });
+        return false;
+      });
+    });
+
+
+    
+</script>
+
+{% endblock %}
+

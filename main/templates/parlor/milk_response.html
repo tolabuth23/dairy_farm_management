@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="{{url_for("static",filename="css/table_style.css")}}">
+
+
+<section class="content-header">
+  <div class="box box-primary mt-2">
+     
+      <!--Start form card -->
+      <div class="box-body">
+        
+          <div class="box-body table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                    
+                      <th>Stall No</th>
+                      <th>Cow No</th>
+                      <th>Milk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% if session["Dictmilk"]:%}
+                  {% for key, milk in session["Dictmilk"].items() %}
+                    <tr>
+                      <td>{{milk.stall_no}}</td>
+                      <td>{{milk.cow_no}}</td>
+                      <td>{{milk.milk}}</td>
+                    </tr>
+                  {% endfor %}
+                  {% endif %}
+                 
+              </tbody>
+            </table>
+          </div>
+          <form action="{{url_for("milkstall")}}" method="post">
+            <button class="btn btn-primary"  style="margin-left: 10px;" type="submit">Save Milk</button>
+          </form>
+                    
+  
+      </div>
+      <!--End form card-->
+   
+  </div>
+  </section>
+

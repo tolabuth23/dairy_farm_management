@@ -1,0 +1,425 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-cubes text-primary" aria-hidden="true"> Catalog</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Animal Types</a></li>
+          <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Stall</a></li>
+          <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Vaccine Type</a></li>
+          <li class=""><a href="#tab_4" data-toggle="tab" aria-expanded="false">Food Unit</a></li>
+          <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">Food Item</a></li>
+        </ul>
+        <div class="tab-content">
+            <!-- Admin -->
+            <div class="tab-pane active" id="tab_1">
+                <h4><i class="fa fa-user-plus text-primary"> Add Animal Type</i></h4>
+                <form class="form-horizontal" action="{{url_for("add_animaltype")}}" method="post">
+                     <div class="form-group mt-md-5">
+                        <label class="col-sm-2 control-label">Type Name</label>
+                        <div class="col-sm-5">
+                          <input type="text" class="form-control" name="type_name" maxlength="20" autocomplete="off" required>
+                        </div>
+                      </div>
+
+                    
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                          <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                      </div>
+                </form>
+
+                <hr>
+                <h4><i class="fa fa-user text-primary"> Animal Type List</i></h4>
+                <div class="box-body table-responsive">
+                  <table class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                            <th style="width: 10%">No</th>
+                            <th style="width:60%">Type Nmae</th>
+                            <th style="width:30%; text-align: center;" >Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                            {% for dt in animaltype %}
+                             <tr>
+                              <td style="text-align:center">{{loop.index}}</td>
+                              <td >{{dt.type_name}}</td>
+                             
+                              <td  style="text-align: center;">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="cancle(1)">Delete</button>
+                                 </td>
+                                </tr>
+                                {% endfor %}
+                          </tbody>
+                  </table>
+                </div>
+            </div>
+
+            <!-- Doctor -->
+            <div class="tab-pane" id="tab_2">
+                <h4><i class="fa fa-plus-circle text-primary" aria-hidden="true"> Add Stall</i></h4>
+                <form class="form-horizontal" action="{{url_for("add_stall")}}" method="post">
+                    <input type="number" name="Level" value="1" hidden>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Stall Number</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Stall Number" name="stall_number" maxlength="100" autocomplete="off" required="">
+                        </div>
+                       
+                     </div>
+
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">Total Cow</label>
+                        <div class="col-sm-4">
+                          <input type="text" class="form-control" placeholder="Total Cow" name="total_cow" maxlength="20" autocomplete="off" required>
+                        </div>
+                      </div>
+
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">Status</label>
+                        <div class="col-sm-4">
+                         <select class="form-control" name="status">
+                            <option value="Available">Available</option>
+                            <option value="Sold">Sold</option>
+                         </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                         <label class="col-sm-2 control-label">Detail</label>
+                         <div class="col-sm-4">
+                           <input type="text" class="form-control" placeholder="Detail" name="detail" maxlength="20" required>
+                         </div>
+                       </div>
+
+
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                          <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                      </div>
+                </form>
+
+                <hr>
+                <h4><i class="fa fa-university text-primary" aria-hidden="true"> Stall List</i></h4>
+                <div class="box-body table-responsive">
+                  <table class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                            <th>No</th>
+                            <th style="width:20%">Stall Number</th>
+                            <th style="width:30%">Total Cow</th>
+                            <th style="width:10%">Cow in stall</th>
+                            <th style="width:10%">Status</th>
+                            <th style="width:15%">Detail</th>
+                            <th style="width: 15%">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                              {% for dt in stall %}
+                              <tr>
+                                <td style="text-align:center">{{loop.index}}</td>
+                                <td>{{dt.stall_number}}</td>
+                                <td>{{dt.total_cow}}</td>
+                                <td>{{stall_cow.filter(Cow.stall_id == dt.id).count()}}</td>
+                                {% if dt.total_cow == stall_cow.filter(Cow.stall_id == dt.id).count() %}
+                                <td ><span class="label label-warning"><b>Sold</b></span></td>
+                                {% else %}
+                                <td><span class="label label-info"><b>Variable</b></span></td>
+                                {% endif %}
+                                <td>{{dt.detail}}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm text-center"  data-toggle="modal" data-target="#exampleModal1{{dt.id}}" 
+                                    data-whatever="Stall"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                    <button class="btn btn-sm btn-danger " data-toggle="modal"  
+                                    data-target="#exampleModal2{{dt.id}}" 
+                                    data-bs-whatever="User" ><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </td>
+                               <!--Edit data stall-->
+                               <div class="modal fade" id="exampleModal1{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                   
+                                    <h5 class="modal-title text-info" id="exampleModalLabel{{dt.id}}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Edit Stall</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <form action="{{url_for("edit_stall",id =dt.id)}}"  id = "" method="POST">
+                                        <div class="form-group">  
+                                        <label for="recipient-name" class="col-form-label ">Stall Number:</label>
+                                        <input type="text" class="form-control" value="{{dt.stall_number}}" name="stall_number" id="recipient-name">
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="recipient-name" class="col-form-label">Total Cow:</label>
+                                          <input type="number" class="form-control" name="total_cow" value="{{dt.total_cow}}" id="recipient-name">
+                                        </div>
+                                        <!-- <div class="mb-3">  
+                                            <label for="recipient-name" class="col-form-label">Status:</label>
+                                            <input type="text" class="form-control" value="{{dt.status}}" name="status" id="recipient-name">
+                                            </div> -->
+                                          <div class="form-group">
+                                            <label>Status</label>
+                                            <select name="status" id="" class="form-control">
+                                              <option selected >--select--</option>
+                                              <option value="Available">Available</option>
+                                              <option value="Sold">Sold</option>
+                                            </select>
+                                          </div>
+                                        
+                                        <div class="form-group">  
+                                            <label for="recipient-name" class="col-form-label">Detail:</label>
+                                            <textarea  class="form-control" value="{{dt.detail}}" name="detail" id="recipient-name">{{dt.detail}}</textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <input type="hidden" value="{{dt.id}}">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!--End of Edit-->
+                            <!--Delete of Stall-->
+                            <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-info" id="exampleModalLabel{{dt.id}}"><i class="fa fa-trash" aria-hidden="true"></i>  Delete Stall</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body">
+                                   <h5>Do you want to delete your data?</h5>
+                                   <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a href="{{url_for("delete_stall",id = dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!--End of Stall-->
+
+                              </tr>
+                              {% endfor %}
+                                                  
+                                         
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+
+            <!-- Dispense -->
+            <div class="tab-pane" id="tab_3">
+                <h4><i class="fa fa-plus-circle text-primary" aria-hidden="true"> Vaccine Type</i></h4>
+                <form class="form-horizontal" action="{{url_for("add_vaccinetype")}}" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Vaccine Name</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="vaccine_name" required>
+                        </div>
+                        
+                     </div>
+
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">Peroid day</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" name="period_day" required>
+                        </div>
+                       
+                      </div>
+
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">Repeat Vaccine</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="repeat_vaccine" required>
+                        </div>
+                       
+                       
+                       </div>
+                       <div class="form-group">
+                        <label class="col-sm-2 control-label">Dose:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="dose" required>
+                        </div>
+                       
+                       
+                       </div>
+                       <div class="form-group">
+                        <label class="col-sm-2 control-label">Note:</label>
+                        <div class="col-sm-4">
+                        <textarea type="text" class="form-control" name="note" required></textarea>
+                        </div>
+                    </div>
+
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                          <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                      </div>
+                </form>
+
+                <hr>
+                <h4><i class="fa fa-flask text-primary" aria-hidden="true">Vaccine Type</i></h4>
+                <div class="box-body table-responsive">
+                  <table class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                            <th style="width:10%">No</th>
+                            <th style="width:20%">Vaccine Name</th>
+                            <th style="width:20%">Peroid</th>
+                            <th style="width:20%">Repeat Vaccine</th>
+                            <th style="width:20%">Dose</th>
+                            <th style="width:20%">Note</th>
+                            <th style="width: 15%">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        {% for dt in vatype %}
+                            <tr>
+                              <td style="text-align:center">{{loop.index}}</td>
+                              <td>{{dt.vaccine_name}}</td>
+                              <td>{{dt.period_day}}</td>
+                              <td>{{dt.repeat_vaccine}}</td>
+                              <td>{{dt.dose}}</td>
+                              <td>{{dt.note}}</td>
+                              <td>
+                              <a href="{{url_for("delete_vaccine_type",id=dt.id)}}" class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                             </td>
+                             {% endfor %}
+                            </tbody>
+                  </table>
+                </div>
+            </div>
+
+            <!-- Service -->
+            <div class="tab-pane" id="tab_4">
+                <h4><i class="fa fa-plus-circle text-primary" aria-hidden="true">Add Food Unit</i></h4>
+                <form class="form-horizontal" action="{{url_for("add_food_unit")}}" method="post">
+               
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Unit Name</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="unit_name" id="recipient-name">
+                        </div>
+                       
+                     </div>
+
+
+                    
+
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                          <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                      </div>
+                </form>
+
+                <hr>
+                <h4><i class="fa fa-sitemap" aria-hidden="true"> Food Unit Item</i></h4>
+                <div class="box-body table-responsive">
+                  <table class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                            <th style="width:10%">No</th>
+                            <th style="width:60%">Unit Name</th>
+                            <th style="width:20%">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                            {% for dt in foodunit %}
+                                <tr>
+                              <td style="text-align:center">{{loop.index}}</td>
+                              <td>{{dt.unit_name}}</td>
+                              <td>
+                                <a class="btn btn-danger" href="{{url_for("delete_foodunit",id=dt.id)}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                             </td>
+                            </tr>
+                            {% endfor %}
+                              </tbody>
+                  </table>
+                </div>
+            </div>
+
+            <!-- Hatthawet -->
+            <div class="tab-pane" id="tab_5">
+                <h4><i class="fa fa-plus-circle text-primary" aria-hidden="true">Food Item</i></h4>
+                <form class="form-horizontal" action="{{url_for("add_foodItem")}}" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="item_name" id="recipient-name">
+                        </div>
+                      </div>
+
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-4">
+                          <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                      </div>
+                </form>
+
+                <hr>
+                <h4><i class="fa fa-sitemap text-primary" aria-hidden="true">  Food Item List</i></h4>
+                <div class="box-body table-responsive">
+                  <table class="table table-hover table-bordered">
+                      <thead>
+                          <tr>
+                            <th>No</th>
+                            <th style="width:90%">Food Name</th>
+                            <th style="width:10%">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                             
+                          {% for dt in foodItem %}
+                            <tr>
+                              <td style="text-align:center">{{loop.index}}</td>
+                              <td>{{dt.item_name}}</td>
+                              <td>
+                                <a class="btn btn-danger" href="{{url_for("delete_foodItem",id=dt.id)}}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                             </td>
+                            </tr>
+                            {% endfor %}
+                                                </tbody>
+                  </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.tab-content -->
+    </div>
+
+<form action="http://ctam.ubru.ac.th/clinic/index.php/Personnel/cancle" method="post" id="frm_cancle">
+    <input type="number" name="PersonnelId" id="personnel_id" hidden>
+</form>
+
+<form action="http://ctam.ubru.ac.th/clinic/index.php/Personnel/cancle_hatthawet" method="post" id="frm_cancle_htw">
+    <input type="number" name="HatthawetId" id="htw_id" hidden>
+</form>
+</section>
+
+
+</section>
+<!--End Content-->
+
+{% endblock %}
+
+

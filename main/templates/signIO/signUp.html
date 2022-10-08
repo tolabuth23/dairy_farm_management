@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/png" sizes="96x96" href="static/img/favicon-96x96.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <title>Dairy Farm Management: Register</title>
+</head>
+<body>
+    <section class="vh-100" style="background-color: #025A6C">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+               <div class="col col-lg-4">
+                  <div class="card" style="border: raduis 1re;" class="bg-danger">
+                      <div class="row g-0 justify-content-center" style="background-color: #CCDEE2;">
+                        <div class="col text-center">
+                            <img src="{{url_for("static", filename="img/logo.png")}}" style="width: 125px;">
+                            <h4>Dairy Farm Management System</h4>
+                            <form action="" method="post" novalidate>
+                              {{form.hidden_tag()}}
+                              <div class="row m-4">
+                                {% if form.username.errors %}
+                                {{form.username(class="form-control p-3 border border-secondary is-invalid" ,style="background-color: #C2D4D7" , placeholder="Username") }}
+                              {% for error in form.username.errors %}
+                                  <div class="invalid-feedback">
+                                      <span>{{error}}</span>
+                                  </div>
+                              {% endfor %}
+                                
+                                {% else %}
+                                {{form.username(class="form-control p-3 border border-secondary" ,style="background-color: #C2D4D7" , placeholder="Username") }}
+                              
+                                {% endif %}
+                              
+                          </div>
+                          <div class="row m-4">
+                            {% if form.email.errors %}
+                            {{form.email(class="form-control p-3 border border-secondary is-invalid" ,style="background-color: #C2D4D7" , placeholder="Email") }}
+                          {% for error in form.email.errors %}
+                              <div class="invalid-feedback">
+                                  <span>{{error}}</span>
+                              </div>
+                          {% endfor %}
+                            
+                            {% else %}
+                            {{form.email(class="form-control p-3 border border-secondary" ,style="background-color: #C2D4D7" , placeholder="Email") }}
+                          
+                            {% endif %}
+                          
+                      </div>
+                      <div class="row m-4">
+                        {% if form.farmname.errors %}
+                        {{form.farmname(class="form-control p-3 border border-secondary is-invalid" ,style="background-color: #C2D4D7" , placeholder="Farm Name") }}
+                      {% for error in form.farmname.errors %}
+                          <div class="invalid-feedback">
+                              <span>{{error}}</span>
+                          </div>
+                      {% endfor %}
+                        
+                        {% else %}
+                        {{form.farmname(class="form-control p-3 border border-secondary" ,style="background-color: #C2D4D7" , placeholder="Farm Name") }}
+                      
+                        {% endif %}
+                      
+                  </div>
+  
+                          <div class="row m-4">
+                              {% if form.password.errors %}
+                              {{form.password(class="form-control p-3 border border-secondary is-invalid" ,style="background-color: #C2D4D7" , placeholder="Password") }}
+                              {% for error in form.password.errors %}
+                                  <div class="invalid-feedback">
+                                      <span>{{error}}</span>
+                                  </div>
+                              {% endfor %}
+                              {% else %}
+                              {{form.password(class="form-control p-3 border border-secondary" ,style="background-color: #C2D4D7" , placeholder="Password") }}
+                          
+                              
+                              {% endif %}
+                              
+                          </div>
+  
+                          {% with messages = get_flashed_messages(with_categories=true) %}
+                          {% if messages %}
+                            <ul class=flashes>
+                            {% for category, message in messages %}
+                              <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                            </ul>
+                          {% endif %}
+                        {% endwith %}
+  
+                            
+                          <div class="row m-4">
+                              {{form.submit(class="btn btn-secondary  p-3",placeholder="Email",style="color:#ffff background-color: #025A6C")}}
+                          </div>
+                          <div class="">
+                              <span>Have an account already? <a href="{{url_for("login")}}" style="color: #03b240; text-decoration: none;"><b>SignIn</b></a></span>
+                          </div>
+                          <br>
+  
+                      </form>
+                        </div>
+                        
+                      </div>
+                     
+                  </div>
+               </div>
+            </div>
+        </div>
+      </section>
+    
+</body>
+</html>

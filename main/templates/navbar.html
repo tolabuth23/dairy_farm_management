@@ -1,0 +1,107 @@
+<aside class="main-sidebar">
+    <section class="sidebar">
+    <div class="user-panel">
+        <div class="pull-left image">
+        <img src="{{url_for("static", filename="/img/profile.png")}}" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+        <p>{{current_user.username}}</p>
+        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+        </div>
+        </div>
+        
+       
+
+
+<ul class="sidebar-menu" data-widget="tree">
+    <li class="header">MAIN NAVIGATION</li>
+    <li><a href="{{url_for("dashoard")}}"><i class="fa fa-dashboard text-primary" aria-hidden="true"></i> <span class="text-primary">Dashboard</span></a></li>
+   
+
+   
+   
+    <li class="treeview">
+        <a href="">
+            <i class="fa fa-users text-primary" aria-hidden="true"></i>
+        <span class="text-primary" >Human Resource</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right text-primary"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+        <li class="text-blue "><a href="{{url_for("staff_list")}}"><i class="fa fa-female text-green" aria-hidden="true"> Staff List</i></a></li>
+        <li><a href="{{url_for("staff_salary")}}"><i class="fa fa-usd  text-green" aria-hidden="true"> Staff Salary</i></a></li>
+        </ul>
+        </li>
+
+        <li class="treeview">
+            <a href="">
+                <i class="fa fa-shopping-basket text-primary" aria-hidden="true"></i>
+            <span class="text-primary">Milk Parlor</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+            <li><a href="{{url_for("collect_milk")}}"><i class="fa fa-university text-green" aria-hidden="true"> Collect Milk</i></a></li>
+            <li><a href="{{url_for("sale_milk")}}"><i class="fa fa-shopping-cart text-green" aria-hidden="true"> Sale Milk</i></a></li>
+            </ul>
+        </li>
+        <li><a href="{{url_for("cow_feed")}}"><i class="fa fa-cutlery text-primary" aria-hidden="true"></i> <span class="text-primary">Cow Feed</span></a></li>
+        
+        <li class="treeview">
+            <a href="">
+                <i class="fa fa-desktop text-primary" aria-hidden="true"></i>
+            <span class="text-primary">Cow Monitor</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+            <li><a href="{{url_for("vaccine")}}"><i class="fa fa-eyedropper text-green" aria-hidden="true"> Vaccine Monitor</i></a></li>
+            <li><a href="{{url_for("breeding")}}"><i class="fa fa-thermometer-full text-green" aria-hidden="true">   Animal Breeding</i></a></li>
+            <li><a href="{{url_for("treatment")}}"><i class="fa fa-bed text-green" aria-hidden="true"> Treatment Monitor</i></a></li>
+            </ul>
+        </li>
+
+        <li><a href="{{url_for("expense")}}"><i class="fa fa-area-chart text-primary" aria-hidden="true"></i> <span class="text-primary">Farm Expense</span></a></li>
+        <li><a href="{{url_for("supplier")}}"><i class="fa fa-user-secret text-primary" aria-hidden="true"></i> <span class="text-primary">Supplier</span></a></li>
+        <li><a href="{{url_for("show_chartjs")}}"><i class="fa fa-user-secret text-primary" aria-hidden="true"></i> <span class="text-primary">Chartjs</span></a></li>
+        
+        <li class="treeview">
+            <a href="">
+            <i class="fa fa-paw text-primary" aria-hidden="true"></i>
+            <span class="text-primary">Manage Animal</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+            <li><a href="{{url_for("cow")}}"><i class="fa fa-android text-green" aria-hidden="true"> Cow </i></a></li>
+            <li><a href="{{url_for("calf")}}"><i class="fa fa-fort-awesome text-green" aria-hidden="true"> Calf</i></a></li>
+            </ul>
+        </li>
+        
+        <li><a href="{{url_for("catalog")}}"><i class="fa fa-newspaper-o text-primary" aria-hidden="true"></i> <span class="text-primary"> Catalog</span></a></li>
+        <li class="treeview">
+            <a href="">
+                <i class="fa fa-bar-chart text-primary" aria-hidden="true"></i>
+            <span class="text-primary"> Reporting</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right text-primary"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+            <li><a href="{{url_for("office_report")}}"><i class="fa fa-line-chart text-green" aria-hidden="true"> Office Expense </i></a></li>
+            <li><a href="{{url_for("employee_salary")}}"><i class="fa fa-signal text-green" aria-hidden="true"> Employee Salary</i></a></li>
+            <li><a href="{{url_for("milk_collect")}}"><i class="fa fa-database text-green" aria-hidden="true"> Milk Collect</i></a></li>
+            <li><a href="{{url_for("milk_sale")}}"><i class="fa fa-pie-chart text-green" aria-hidden="true"> Milk Sale</i></a></li>
+            <li><a href="{{url_for("vaccine_monitor")}}"><i class="fa fa-cloud text-green" aria-hidden="true"> Vaccine Monitor</i></a></li>
+            <li><a href="{{url_for("cow_statistic")}}"><i class="fa fa-cloud text-green" aria-hidden="true"> Animal Statistic</i></a></li>
+            </ul>
+        </li>
+    </ul>
+
+</section>
+</aside>
+

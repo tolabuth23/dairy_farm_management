@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-first-order text-primary" aria-hidden="true">  Cow Feed</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border">
+        <a><h4><i class="fa fa-exclamation-circle text-primary" aria-hidden="true"> Feed Information</i></h4></a>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <form action="{{url_for("add_feed")}}" method="POST">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Stall No</label>
+                        <select class="form-control form-select-sm" name="stall_no" data-live-search="true"   id="search_stall_id" required>
+                            <option value="">--select--</option>
+                                {% for dt in stall %}
+                              <option value="{{dt.stall_number}}">{{dt.stall_number}}</option>
+                            {% endfor %}
+                      </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>From Date</label>
+                        <input class="form-control" type="date" placeholder="date" name="datefrom">
+                    </div>  
+                </div>
+
+                
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>To Date</label>
+                        <input class="form-control" type="date" placeholder="date" name="dateto">
+                    </div>  
+                </div>
+            </div>
+            
+                <div >
+                    <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr class="text-center">
+                        <th width="25%">Feed Item</th>
+                        <th width="25%">Item Quantity</th>
+                        <th width="25%">Unit</th>
+                        <th width="25%">Feeding Time</th>
+                         
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for dt in foodItem %}             
+                      <tr>
+                        <td width="25%">
+                          <div class="form-check">
+                            <input name="foodname[]" class="form-check-input"  type="checkbox" value="{{dt.item_name}}" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                          {{dt.item_name}}
+                            </label>
+                          </div>
+                        </td>
+                        <td width="25%">
+                          <input id="" name="quality[]" class="form-control" placeholder="Ex: 76" >
+                        </td>
+                        <td width="25%">
+                          <select id="" name="unit_name[]" class="form-control" >
+                            <option>--select--</option>
+                            {% for dt in foodUnit %}
+                                <option value="{{dt.unit_name}}">{{dt.unit_name}}</option>
+                            {% endfor %}
+                            
+                          </select>
+                        </td>
+                        <td width="25%">
+                           <input id="" name="feeding_time[]" class="form-control" placeholder="Ex: 9:30 Am" >
+                        </td>
+                      </tr>
+    
+                      {% endfor %}
+       
+                    </tbody>
+                   </table>
+            </div>
+
+
+            <div class="form-group">
+                <label>Note</label>
+                <textarea type="text" class="form-control" placeholder="Note" name="note"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="form-control btn btn-primary" style="width: 100px; height: 35px;">Save</button>
+            </div>  
+        </form>
+    </div>
+    <!--End form card-->
+
+<!--Feed Information-->
+
+<!--End of Feed Information-->
+
+
+</div>
+</section>
+</section>
+<!--End Content-->
+
+{% endblock %}
+

@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<section class="content">
+<section class="content-header">
+  <h1 ><i class="fa fa-gg-circle text-primary" aria-hidden="true">  Collect Milk Stall</i></h1>
+</section>
+<!--Start content-->
+
+<section class="content-header">
+<div class="box box-primary mt-2">
+    <div class="box-header with-border">
+        <h3 class="box-title text-primary"><i class="fa fa-plus-square-o" aria-hidden="true">  Add Stall Milk</i>  </h3>
+        <div class="box-tools pull-right">
+            
+        </div>
+    </div>
+    <!--Start form card -->
+    <div class="box-body">
+        <!--Start row form-->
+    <form action="{{url_for("add_stallmilk")}}" method="POST" enctype="multipart/form-data">
+        <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Stall Number</label>
+                           <select class="form-control select2  stall_no" id="search_stall_id" name="stall_no"  data-placeholder="Employee Name" style="width: 100%;">
+                            <option selected>--Select--</option>
+                            {% for db in stall %}
+                            <option value="{{db.stall_number}}">{{db.stall_number}}</option>
+                            {% endfor %}
+                           
+                           </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Cow ID</label>
+                            {% if datas %}
+                                    <div id="form-select">
+                                        <select style="color: #565050;" name="cow_id" required id="show_sub_categories"  class="form-control select2  cow_id">
+                                        
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <div id="form-select">
+                                        <select style="color: #565050;" name="cow_id" required id="show_sub_categories" class="form-control select2  cow_id">
+                                        <option value="" selected="selected">--Select--</option>
+                                        </select>
+                                    </div>
+                                {% endif %}
+                        </div>
+                       
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Milk</label>
+                            <input type="number" class="form-control milk" placeholder="Milk" name="milk" id="milk" maxlength="100" autocomplete="off" required=""></input>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <button id="add_more" style="color: white; margin-top: 24px;"  type="submit" class="btn btn-primary text-start">Add More</button>
+   
+                        </div>
+                    </div>
+
+            </div>
+
+            <!--End column form-->
+           
+
+    </form>
+      <hr>
+      <div id="show_response">
+
+        </div>
+                    <!--Start of row pagination-->
+
+                    
+                    <!--End of row pagination-->
+
+
+    </div>
+    <!--End form card-->
+ 
+</div>
+</section>
+
+</section>
+<!--End Content-->
+
+
+
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  });
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    $('#add_more').click(function(){
+        $.post("/add_stallmilk", {
+        stall_no: $('.stall_no').val(),
+        cow_id : $('.cow_id').val(),
+        milk : $('.milk').val()
+        
+        }, function(response){ 
+            $('#show_response').html(response);
+            $('#show_response').append(response.htmlresponse);
+        });
+        return false;
+      });
+
+    })
+</script> 
+
+
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('#search_stall_id').change(function(){
+      $.post("/get_animal", {
+      parent_id: $('#search_stall_id').val(),
+      }, function(response){ 
+          $('#show_sub_categories').html(response);
+          $('#show_sub_categories').append(response.htmlresponse);
+      });
+      return false;
+    });
+    $('#search_stall_id1').change(function(){
+      $.post("/get_stall_no", {
+      parent_id: $('#search_stall_id1').val(),
+      }, function(response){ 
+          $('#show_sub_categories1').html(response);
+          $('#show_sub_categories1').append(response.htmlresponse);
+      });
+      return false;
+    });
+    });
+</script>
+{% endblock %}
+

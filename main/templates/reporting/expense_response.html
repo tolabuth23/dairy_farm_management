@@ -1,0 +1,85 @@
+<link rel="stylesheet" href="{{url_for("static",filename="css/table_style.css")}}">
+
+   
+<div class="row" style="text-align: end;">
+<div class="col-10"></div>
+<div class="col-2">
+
+    <form action="{{url_for("get_expense")}}" method="post">
+        <input type="hidden" value="{{date_from}}" name="date_from">
+        <input type="hidden" value="{{date_to}}" name="date_to">
+        <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-print text-white"></i></button>
+    </form>
+    <button class="btn btn-info mt-2 btn-sm" style="margin-top: 3px;" id="export"><i class="fa fa-file-excel-o text-white" aria-hidden="true"></i></button>
+    </div>
+
+</div>
+</div>
+<div class="row">
+    {% if data %}
+    <div style="text-align: center;">
+        <div>
+            <img  src="{{url_for("static",filename="img/brand.png")}}" width="60">
+            <p>Office Expense Report</p>
+            <p>For Date: {{date_from}} - {{date_to}}
+        </div>
+    </div>
+<hr>
+
+       
+       
+<div class="box-body table-responsive">
+    <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Date</th>
+                        <th style="text-align:start;">Purpose</th>
+                        <th style="text-align:start;">Total Cost</th>
+                    </tr>   
+                </thead>
+                <tbody>
+                  
+                    {% for dt in data %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{dt.date}}</td>
+                            <td style="text-align:start;">{{dt.purposes}}</td>
+                            <td style="text-align:start;">฿ {{dt.total_amount}}</td>
+                            
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td style="text-align: end;">Total: </td>
+                        <td style="text-align: start;">
+                        ฿ {{total_amount}}
+                        </td>
+                    </tr>
+                
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+      <div class="card">
+        <div class="card-body">
+            <p style="text-align: center" class="text-danger">Don't have Expense report  from {{date_from}} to {{date_to}}</p>
+        </div>
+      </div>
+    {% endif %}
+
+
+</div>
+    
+
+
+    <script src="/static/js/table2excel.js"></script>
+    <script>
+      var table2excel = new Table2Excel();
+
+      document.getElementById('export').addEventListener('click', function() {
+        table2excel.export(document.querySelectorAll('table'));
+      });
+    </script>
