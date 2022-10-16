@@ -29,23 +29,37 @@ def dashoard():
         chart.append(int(i.total_amount))
         dates.append(i.date)    
     dat = date.today()
-    dat1 = timedelta(7)
+    dat1 = timedelta(6)
     
     da = dat - dat1
-    data1 = Milkstall.query.filter(Milkstall.date <= dat, Milkstall.date >= da,Milkstall.user_id == current_user.id).all()
+    datas1 = Milkstall.query.filter(Milkstall.date <= dat, Milkstall.date >= da,Milkstall.user_id == current_user.id).all()
     charts =[]
     dates1 = []
-    for i in data1:
-        charts.append(int(i.totalmilk))
-        dates1.append(i.date)
+    for i in datas1:
+        #charts.append(int(i.totalmilk))
+        t = i.date
+        text1 = t.strftime("%Y-%m-%d")
+        dates1.append(text1)
     print(dates1)
     print(dates1)
+    
+    dat = date.today()
+    dat1 = timedelta(6)
+    da = dat - dat1
     chart3 =[]
     date3 = []
-    data3 = Salemilk.query.filter(Salemilk.user_id == current_user.id).all()
+    data3 = Salemilk.query.filter(Salemilk.date <= dat, Salemilk.date >= da, Salemilk.user_id == current_user.id).all()
     for i in data3:
-        chart3.append(int(i.total))
-        date3.append(i.date)
+        #chart3.append(int(i.total))
+        #date3.append(i.date)
+        t = i.date
+        text3 = t.strftime("%Y-%m-%d")
+        date3.append(text3)
+    print("Amount of chart 3: ", date3)
+    print("Amount of data: ", data3)
+    
+        
+        
     pre = Pregnant.query.filter(Pregnant.user_id == current_user.id)
     mount = 0
     for i in pre:
@@ -64,22 +78,94 @@ def dashoard():
             print("No have pregnment!!!!")
             
         dat = date.today()
-        dat1 = timedelta(7)
+        dat1 = timedelta(6)
     
         da = dat - dat1
         user = User.query.get(current_user.id)
         print("data start : ",da)
         print("date finish : ", dat)
         ex =Expense.query.filter(Expense.date <= dat, Expense.date >= da ,Expense.user_id == user.id).all()
-    
         print(ex)
         date4 = []
-    
         for i in ex:
             t = i.date
             text1 = t.strftime("%Y-%m-%d")
             date4.append(text1)
-    return render_template("index.html",ds = date4, ex = ex, mount = mount,
+            #get data all 
+        ex_all = Expense.query.filter(Expense.user_id == user.id).all()
+        sale_all = Salemilk.query.filter(Salemilk.user_id == user.id).all()
+        milk_all = Milkstall.query.filter(Milkstall.user_id == user.id).all()
+        
+        
+    #kHow to find data for to get data expense
+    date_today = date.today()
+    determie_delta = timedelta(6)
+    date_last = date_today - determie_delta
+    get_data_expense = Expense.query.filter(Expense.user_id == user.id, 
+                        Expense.date <= date_today, Expense.date >= date_last).all()
+    data_expense = []
+    for i in get_data_expense:
+        t = i.date
+        text1 =t.strftime("%Y-%m-%d")
+        data_expense.append(text1)      
+    data_exp = list(dict.fromkeys(data_expense))
+    data_exp_price =[]
+    for i in data_exp:
+        price = db.session.query(func.sum(Expense.total_amount)).filter(Expense.user_id == user.id,
+                                Expense.date == i).scalar()
+        data_exp_price.append(price)
+    #kHow to find data for to get data expense
+    date_today = date.today()
+    determie_delta = timedelta(6)
+    date_last = date_today - determie_delta
+    get_sale_milk = Salemilk.query.filter(Salemilk.user_id == user.id,
+                                          Salemilk.date <= date_today, Salemilk.date >= date_last).all()
+    data_sale = []
+    for i in get_sale_milk:
+        t = i.date
+        text2 = t.strftime("%Y-%m-%d")
+        data_sale.append(text2)
+    data_sal = list(dict.fromkeys(data_sale))
+    data_sale_cost =[]
+    for i in data_sal:
+        sal = db.session.query(func.sum(Salemilk.total)).filter(Salemilk.user_id == user.id,
+                            Salemilk.date == i).scalar()
+        data_sale_cost.append(sal)
+        
+        
+    #kHow to find data for to get data expense
+    date_today = date.today()
+    determie_delta = timedelta(6)
+    date_last = date_today - determie_delta
+    get_stall_milk = Milkstall.query.filter(Milkstall.user_id == user.id,
+                                          Milkstall.date <= date_today, Milkstall.date >= date_last).all()
+    data_total = []
+    for i in get_sale_milk:
+        t = i.date
+        text2 = t.strftime("%Y-%m-%d")
+        data_total.append(text2)
+    data_stall_total_date = list(dict.fromkeys(data_total))
+    data_stall_milk =[]
+    for i in data_stall_total_date:
+        sal = db.session.query(func.sum(Milkstall.totalmilk)).filter(Milkstall.user_id == user.id,
+                            Milkstall.date == i).scalar()
+        data_stall_milk.append(sal)
+        
+
+    
+    
+    return render_template("index.html",
+                            data_exp = data_exp,
+                            data_exp_price = data_exp_price,
+                            data_sal = data_sal,
+                            data_sale_cost = data_sale_cost,
+                            data_stall_total_date = data_stall_total_date,
+                            data_stall_milk = data_stall_milk,
+                           ex_all = ex_all,
+                           sale_all = sale_all,
+                           milk_all = milk_all,
+                           ds = date4, ex = ex, mount = mount,
+                           data3 = data3,data1 = datas1,
                            chart3 = chart3,pre = pre,d=date,dates = dates, date3 = date3,charts = charts,
                            dates1 = dates1,da = chart,sale_milk = sale_milk,sale_milk_amount= sale_milk_amount,
                            datetime = datetime,   total_sale =total_sale,total_cow_stall = total_cow_stall,

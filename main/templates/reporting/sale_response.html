@@ -156,18 +156,18 @@
 
 
 
-
-
-        <script >
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script >
     const ctx = document.getElementById('myChart').getContext('2d');
 
     const myChart = new Chart(ctx,{
     type: 'line',
     data: {
-        labels: [{% for dt in dates %}"{{dt}}",{% endfor %}],
+        labels: [{% for dt in data_date %}"{{dt}}",{% endfor %}],
         datasets: [{
             label: '# Total Price Milk (Baht)',
-            data: [{% for dt in da %}{{dt}},{% endfor %}],
+            data: [{% for dt in data_sale_milk %}{{dt}},{% endfor %}],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -189,6 +189,12 @@
     },
     options: {
         scales: {
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day'
+                }
+            },
             y: {
                 beginAtZero: true
             }
@@ -256,6 +262,6 @@ options: {
         table2excel.export(document.querySelectorAll('table'));
       });
     </script>
-
+   
 
 <!--End of hightChart -->

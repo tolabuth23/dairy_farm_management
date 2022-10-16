@@ -152,38 +152,55 @@ def get_milk_sale():
         date_to = request.form["date_to"]
         user = User.query.get(current_user.id)
         data = Salemilk.query.filter(Salemilk.user_id == user.id, Salemilk.date >= date_from, Salemilk.date <=date_to).all()
+        #make a data of sale chart
+        print("Date _from : ", date_from)
+        print("Date to :", date_to) 
+        data_date = []
+        for i in data:
+            t = i.date
+            text1 =t.strftime("%Y-%m-%d")
+            data_date.append(text1)
+        print("Date date: ", data_date)
+        data_date_focus = list(dict.fromkeys(data_date))
+        print("Data date focus: ", data_date_focus)
+        data_sale_milk = []
+        for i in data_date_focus:
+            ddf = db.session.query(func.sum(Salemilk.total)).filter(Salemilk.user_id ==user.id, 
+                                    Salemilk.date == i).scalar()
+            data_sale_milk.append(ddf)
+            
+  
+        
         chart =[]
         dates = []
         supplier =[]
-
-        
         for i in data:
             chart.append(int(i.total))
             dates.append(i.date)
             supplier.append(i.supplier_name)
-        
         sup = list(dict.fromkeys(supplier))
         dates = list(dict.fromkeys(dates))
         total_date =[]
         for i in dates:
             dat =db.session.query(func.sum(Salemilk.total)).filter(Salemilk.date == i).scalar()
             total_date.append(dat)
+            
         total =[]
         for i in sup:
-            dat =db.session.query(func.sum(Salemilk.lite)).filter(Salemilk.supplier_name == i).scalar()
+            dat =db.session.query(func.sum(Salemilk.lite)).filter(Salemilk.supplier_name == i,Salemilk.date >= date_from, Salemilk.date <=date_to).scalar()
             total.append(dat)
         sup_total = dict(zip(sup,total_date))
-        print(sup_total)
-        
-        print(sup)
-        print(chart)
-        print(dates[0])
         s =[{"num1": 200}, {"num2": 300}, {"num3": 400}, {"num4": 500}]
-        
         totalprice = 0
         for dt in data:
             totalprice = totalprice +int(dt.total)
-        return jsonify({"htmlresponse": render_template("/reporting/sale_response.html",sup_total = s,total = total,sup = sup,da =chart,dates = dates,totalprice = totalprice,data = data, date_from = date_from, date_to = date_to, chart = total_date)})
+        return jsonify({"htmlresponse": render_template("/reporting/sale_response.html",
+                                                        data_date = data_date_focus,
+                                                        sup_total = s,total = total,sup = sup,
+                                                        da =chart,dates = dates,
+                                                        totalprice = totalprice,data = data,data_sale_milk = data_sale_milk,
+                                                        date_from = date_from, date_to = date_to,
+                                                        chart = total_date)})
 #this is get html salary to pdf
 @app.route("/sale_pdf", methods=["POST", "GET"])
 def sale_pdf():
