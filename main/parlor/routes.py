@@ -1,4 +1,6 @@
+
 from datetime import date
+from re import search
 from main import db,app
 from flask import render_template,session,request,flash,redirect,url_for,jsonify,make_response
 from main.signIO.forms import LoginForm, RegisterForm
@@ -7,12 +9,24 @@ from flask_login import current_user, login_user, logout_user
 import io,secrets,os
 import pdfkit
 
-@app.route("/parlor/collect_milk")
+@app.route("/parlor/collect_milk", methods=["POST", "GET"])
 def collect_milk():
-    user = User.query.get(current_user.id)
-    csmilk = Milkstall.query.filter(Milkstall.user_id == user.id).order_by(Milkstall.id.desc())
-    page = request.args.get('page', 1, type=int)
-    data = csmilk.paginate(page = page, per_page = 10)
+    if request.method == 'POST':
+        user = User.query.get(current_user.id)
+        page = request.args.get('page', 1, type=int)
+        csm = Milkstall.query.filter(Milkstall.user_id == user.id)
+        by_date = request.form['by_date']
+        csmilk = csm.filter(Milkstall.date.like('%'+by_date+'%') | Milkstall.stall_no.like('%'+ by_date+'%')).order_by(Milkstall.id.desc())
+        data = csmilk.paginate(page = page, per_page = 100)
+        
+        
+    else:
+        user = User.query.get(current_user.id)
+        csmilk = Milkstall.query.filter(Milkstall.user_id == user.id).order_by(Milkstall.id.desc())
+        page = request.args.get('page', 1, type=int)
+        data = csmilk.paginate(page = page, per_page = 20)
+    
+    
     return render_template('parlor/collect_milk.html', data = data)
 
 
@@ -88,6 +102,7 @@ def milkstall():
         for key, item in session["Dictmilk"].items():
             stall_no = item["stall_no"]
             totalmilk = int(item["milk"]) + totalmilk
+        
         db.session.add(Milkstall(stall_no=stall_no, milk_detail=milk_detail, totalmilk=totalmilk, user_id = current_user.id))
         db.session.commit()
         session.pop("Dictmilk",None)
@@ -102,14 +117,11 @@ def delete_collect_milk(id):
     return redirect(url_for('collect_milk'))
 
 
-@app.route("/parlor/sale_milk")
+@app.route("/parlor/sale_milk", methods=['POST', "GET"])
 def sale_milk():
-    
     user = User.query.get(current_user.id)
-    sal = Salemilk.query.filter(Salemilk.user_id == user.id).order_by(Salemilk.id.desc())
-    page = request.args.get('page', 1, type=int)
-    data = sal.paginate(page = page, per_page = 5)
     sal1 = Salemilk.query.filter(Salemilk.user_id == user.id).all()
+    sal = Salemilk.query.filter(Salemilk.user_id == user.id).order_by(Salemilk.id.desc())
     n = 0
     if sal:
         for no in sal1:
@@ -135,6 +147,20 @@ def sale_milk():
         tsale = int(s.lite) + tsale
     s = tsale
     print(s)
+    if request.method == 'POST':
+        
+        page = request.args.get('page', 1, type=int)
+        csm = Salemilk.query.filter(Salemilk.user_id == user.id)
+        search = request.form['search']
+        salemilks = csm.filter(Salemilk.date.like('%'+search+'%') | Salemilk.sale_no.like('%'+ search+'%') | Salemilk.supplier_name.like('%'+search+'%')).order_by(Salemilk.id.desc())
+        data = salemilks.paginate(page = page, per_page = 100)
+    else:
+        
+        sal = Salemilk.query.filter(Salemilk.user_id == user.id).order_by(Salemilk.id.desc())
+        page = request.args.get('page', 1, type=int)
+        data = sal.paginate(page = page, per_page = 25)
+        
+    
     
     return render_template("/parlor/sale_milk.html",sale_no = sale_no, data = data, datas = to, suppliers = suppliers , cmilk = cm, saled = s)
 
@@ -159,7 +185,9 @@ def new_smilk():
         contact = request.form["contact"]
         email = request.form["email"]
         address = request.form["address"]
-        smilk = Salemilk(invoice = invoice,sale_no = sale_no, supplier_name = supplier_name,
+        month_today = date.today()
+        month_today = month_today.strftime("%m")
+        smilk = Salemilk(month=month_today,invoice = invoice,sale_no = sale_no, supplier_name = supplier_name,
         contact = contact, email = email, address = address, lite = lite, price = price, total = total, user_id =current_user.id)
         db.session.add(smilk)
         db.session.commit()

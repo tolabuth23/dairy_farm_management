@@ -1,3 +1,4 @@
+from imghdr import tests
 from main import db,app
 from flask import render_template,session,request,flash,redirect,url_for,jsonify,make_response
 from main.signIO.forms import LoginForm, RegisterForm
@@ -11,12 +12,43 @@ import pdfkit
 from sqlalchemy import func
 
 
-@app.route("/treatment")
+@app.route("/treatment", methods=["POST", "GET"])
 def treatment():
     user = User.query.get(current_user.id)
+    page = request.args.get('page', 1, type=int)
     stall = Stall.query.filter(Stall.user_id == user.id)
-    treat = Treatment.query.filter(Treatment.user_id == user.id)
-    return render_template("treatment/treatment.html", stall = stall, treat = treat)
+    if request.method == "POST":
+        treats = Treatment.query.filter(Treatment.user_id == user.id)
+        search = request.form["search"]
+        if search =="":
+            treat = Treatment.query.filter(Treatment.user_id == user.id)
+            treat = treat.paginate(page = page, per_page = 25)
+        else: 
+            stalls = Stall.query.filter_by(stall_number = search).first()
+            cows = Cow.query.filter_by(cow_no = search).first()
+            if stalls:
+                stall_id = int(stalls.id)
+                print("stall id", stall_id)
+                treat = treats.filter(Treatment.stall_no.like(2)).order_by(Treatment.id.desc())
+                
+                treat = treat.paginate(page = page, per_page = 50)
+                print(treat.items)
+            
+            
+            elif cows:
+                cow_id = int(cows.id)
+                print("Cow ID", cow_id)
+                treat = treats.filter(Treatment.cow_no.like(cow_id)).order_by(Treatment.id.desc())
+                treat = treat.paginate(page = page, per_page = 50)
+            else:
+                treat = treats.filter(Treatment.date.like("%"+search+"%")).order_by(Treatment.id.desc())
+                treat = treat.paginate(page = page, per_page = 50)
+    else:
+        stall = Stall.query.filter(Stall.user_id == user.id)
+        treat = Treatment.query.filter(Treatment.user_id == user.id)
+        treat = treat.paginate(page = page, per_page = 25)
+    
+    return render_template("treatment/treatment.html", stall = stall, data = treat)
 
 @app.route("/add_treatment", methods=["POST", "GET"])
 def add_treatment():

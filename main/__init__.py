@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"]='mysql://od8us9sy1uyiw5lq:qe8fx61ybc7psi32@migae5o25m2psr4q.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/idid745krjsnsxlw'
+app.config["SQLALCHEMY_DATABASE_URI"]='mysql://root@localhost/dairymanagement'
 app.config['SECRET_KEY'] = b'tola@1212'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
@@ -26,3 +26,4 @@ from main.manage import routes
 from main.catalog import routes
 from main.reporting import routes
 from main.treatment import routes
+from main.admin import routes

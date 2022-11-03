@@ -1,3 +1,4 @@
+
 from main import db,app
 from flask import render_template,session,request,flash,redirect,url_for,jsonify
 from main.signIO.forms import LoginForm, RegisterForm
@@ -17,11 +18,22 @@ def save_picture(img):
 
 def delete_picture(img):
     os.remove(os.path.join(app.root_path, 'static/img', img))
-@app.route("/supplier")
+@app.route("/supplier", methods=["POST", "GET"])
 def supplier():
     user = User.query.get(current_user.id)
     sup = Supplier.query.filter(Supplier.user_id == user.id)
-    return render_template("/supplier/supplier.html",data = sup)
+    page = request.args.get('page', 1, type=int)
+    if request.method == "POST":
+        search = request.form["search"]
+        if search == "":
+            data = sup.paginate(page = page, per_page=25)
+        else:
+            sups = sup.filter(Supplier.supplier_name.like("%"+search+"%") | Supplier.company_name.like("%"+search+"%")).order_by(Supplier.id.desc())
+            data = sups.paginate(page=page, per_page=25)
+            
+    else:
+        data = sup.paginate(page = page, per_page = 25)
+    return render_template("/supplier/supplier.html",data =data)
 
 
 @app.route("/add_supplier", methods=["POST", "GET"])

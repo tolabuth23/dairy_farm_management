@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
+ {% if session.user_type=="Farmer" %}
  
+
 <section class="content">
 <section class="content-header">
   <h1><i class="fa fa-cubes text-primary"> Dashboard</i> </h1>
@@ -114,24 +116,24 @@
 
 <div class="row m-2">
   <div class="col-md-6">
-    <div class="box box-danger">
+    <div class="box box-danger" >
       <div class="box-header">
-        <span><i class="fa fa-bar-chart" aria-hidden="true"></i>  Monthly Milk Sale  Chart</span>
+        <span><i class="fa fa-bar-chart" aria-hidden="true"></i>  Weekly Milk Sale  Chart</span>
       </div>
         <div class="box-body">
-            <canvas id="myChart3" width="50px;" height="50px;"></canvas>
+            <canvas id="myChart3" width="400" height="300"></canvas>
             
         </div>
     </div>
    </div>
 
      <div class="col-md-6">
-      <div class="box box-danger">
+      <div class="box box-danger" >
         <div class="box-header">
           <span><i class="fa fa-bar-chart" aria-hidden="true"></i>  Weekly Total Milk Chart</span>
         </div>
           <div class="box-body">
-            <canvas id="myCharts" width="50px;" height="50px;"></canvas>
+            <canvas id="myCharts" width="400" height="300"></canvas>
             
            
           </div>
@@ -144,36 +146,35 @@
   
 
      <div class="col-md-6">
-      <div class="box box-danger">
+      <div class="box box-danger" >
         <div class="box-header">
           <span><i class="fa fa-bar-chart" aria-hidden="true"></i>  Weekly Expense Farm  Chart</span>
         </div>
           <div class="box-body">
-              <canvas id="myChart4" width="50px;" height="50px;"></canvas>
-             
-      
+              <canvas id="myChart4" width="400" height="300"></canvas>
           </div>
       </div>
      </div>
-     
+
+     <div class="col-md-6">
+      <div class="box box-danger" >
+        <div class="box-header">
+          <span><i class="fa fa-bar-chart" aria-hidden="true"></i>  Net Income Farm  Chart</span>
+        </div>
+          <div class="box-body">
+              <canvas id="myChart5" width="400" height="300"></canvas>
+          </div>
+      </div>
+     </div>
+    
 </div>
 
-
 </section>
-
 </section>
-     
-
-    
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-
-
-
-
   <script>
   // setup 
   const dates = [{% for dt in data_exp %}"{{dt}}",{% endfor %}]
@@ -253,7 +254,7 @@
       //copydatapoints.splice(endArray + 1 , filterDates.lenght);
       //copydatapoints.splice(0, startArray)
       //console.log(copydatapoints)
-      myChart4.config.data.datasets[0].data =[{% for dt in ex_all %} "{{dt.total_amount}}",  {% endfor %}]
+     
 
       myChart4.update();
 
@@ -264,78 +265,6 @@
       myChart4.update();
   }
   </script>
-
-
-
-
-<script >
-  const ctx = document.getElementById('myChart').getContext('2d');
-
-  const myChart = new Chart(ctx,{
-  type: 'line',
-  data: {
-      labels: [{% for dt in dates %}"{{dt}}",{% endfor %}],
-      datasets: [{
-          label: '# Total Expense in Farm (฿)',
-          data: [{% for dt in da %}{{dt}},{% endfor %}],
-          backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-      }]
-  },
-  options: {
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-              unit: 'day'
-          }
-      },
-          y: {
-              beginAtZero: true
-          }
-      }
-  }
-});
-
-function filterDate3(){
-  //(new Date('2022-10-01 00:00:00 GMT+0800'))
-  const start1 = new Date(document.getElementById("start").value);
-  const start = start1.setHours(0,0,0,0);
-  const end1 = new Date(document.getElementById("end").value);
-  const end = end1.setHours(0,0,0,0);
-
-  const  filterDates = convertedDates.filter(date => date >= start && date <=end )
-  myChart4.config.data.labels = filterDates;
-  //working on the data 
-  //const startArray = convertedDates.indexOf(filterDates[0]);
-  //const endArray = convertedDates.indexOf(filterDates[filterDates.lenght-1]);
-  //console.log(startArray)
-  //console.log(endArray);
-  //const copydatapoints = [...datapoints];
-  //copydatapoints.splice(endArray + 1 , filterDates.lenght);
-  //copydatapoints.splice(0, startArray)
-  //console.log(copydatapoints)
-  myChart4.config.data.datasets[0].data =[{% for dt in ex_all %} "{{dt.total_amount}}",  {% endfor %}]
-
-  myChart4.update();
-
-}
-</script>
 
 <script >
   const ctxs = document.getElementById('myCharts').getContext('2d');
@@ -367,22 +296,24 @@ function filterDate3(){
       }]
   },
   options: {
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-              unit: 'day'
-          }
+    scales: {
+      xAxes:{
+        type: 'time',
+        time: {
+          unit: 'day'
+        }
       },
-          y: {
-              beginAtZero: true
-          }
+      yAxes:[
+      {
+        ticks:{
+          beginAtZero: true
+        }
+      }]
+       
       }
   }
 });
 </script>
-
-
 <script >
   const ctx3 = document.getElementById('myChart3').getContext('2d');
 
@@ -413,16 +344,20 @@ function filterDate3(){
       }]
   },
   options: {
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-              unit: 'day'
-          }
+    scales: {
+      xAxes:{
+        type: 'time',
+        time: {
+          unit: 'day'
+        }
       },
-          y: {
-              beginAtZero: true
-          }
+      yAxes:[
+      {
+        ticks:{
+          beginAtZero: true
+        }
+      }]
+       
       }
   }
 });
@@ -450,6 +385,73 @@ function filterDate3(){
 
 }
 </script>
+
+
+
+<script >
+  const ctx5 = document.getElementById('myChart5').getContext('2d');
+
+  const myChart5 = new Chart(ctx5,{
+  type: 'bar',
+  data: {
+      labels: [{% for dt in month_data_income %}"{{dt}}",{% endfor %}],
+      datasets: [{
+          label: 'Weekly Net Income(฿)',
+          data: [{% for dt in net_income %}{{dt}},{% endfor %}],
+          backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+    scales: {
+      xAxes:{
+        type: 'time',
+        time: {
+          unit: 'day'
+        }
+      },
+      yAxes:[
+      {
+        ticks:{
+          beginAtZero: true
+        }
+      }]
+       
+      }
+  }
+});
+
+</script>
+
+
+{% else %}
+<section class="content">
+  <section class="content-header">
+    <h1><i class="fa fa-cubes text-primary"> Dashboard</i> </h1>
+  </section>
+</section>
+
+{% endif %}
+
+
+
+
+
 {% endblock %}
 
 

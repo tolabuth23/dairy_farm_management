@@ -10,12 +10,25 @@
 
 <section class="content-header">
 <div class="box box-primary mt-2">
-    <div class="box-header with-border" style="text-align: end;">
-        <a href="{{url_for("add_breeding")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  Add Breeding </i></a>
+
+    <div class="box-header with-border">
+      <h3 class="box-title text-primary" ><i>List Cow Breeding</i></h3>
+      <div class="box-tools">
+        <form action="{{url_for("breeding")}}" method="POST">
+        <div class="input-group input-group-sm hidden-xs" style="width: 300px;">
+          <input type="text" name="search" class="form-control pull-right" placeholder="Stall, Cow ID">
+          <div class="input-group-btn">
+            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+      </form>
+      </div>
     </div>
+
     <!--Start form card -->
     <div class="box-body">
         <div class="box-body table-responsive">
+          <a href="{{url_for("add_breeding")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  Add Breeding </i></a>
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -24,9 +37,10 @@
                     <th>Cow ID</th>
                     <th>Breeding Type</th>
                     <th>Semen Type</th>
-                    <th>Semen Push Date</th>
+                   
                     <th>Breeding Start Date</th>
                     <th>Breeding Status</th>
+                    <th>Pregnant Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -39,9 +53,28 @@
                   <td>{{dt.cow.cow_no}}</td>
                   <td style="text-align: start;">{{dt.pregnancy_type}}</td>
                   <td style="text-align: start;">{{dt.animaltype.type_name}}</td>
-                  <td>{{dt.semen_push_date}}</td>
+                  
                   <td>{{dt.pregnancy_start_date}}</td>
                   <td class="text-primary">{{dt.pregnancy_status}}</td>
+                  {% set dat1 = dt.pregnancy_start_date %}
+                  {% set text1 = dat1.strftime("%Y,%m,%d") %}
+                  {% set d1 = text1.split(",") %}
+                  {% set dat2 = datetime.datetime.now() %}
+                  {% set text2 = dat2.strftime("%Y,%m,%d") %}
+                  {% set d2 = text2.split(",") %}
+                  {% set wid = d((d2[0]|int), (d2[1]|int), (d2[2]|int)) - d((d1[0]|int), (d1[1]|int), (d1[2]|int)) %}
+                  {% set wid1 = wid.days %}
+                  {% set wids = wid1|int - 1 %}
+                  {% set wid3 = wids|int /279 %}
+                  {% set wid4 = wid3* 99 + 1 %}
+                  {% if wid1 >= 280 %}
+                  <td >
+                    <span class="label label-info">Already</span>
+                  </td>
+                  {% else %}
+                  <td><span class="label label-warning">Not yet</span></td>
+                  {% endif %}
+                  
                   <td>
                   <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#exampleModal{{dt.id}}" 
                   data-whatever=" Cow"><i class="fa fa-eye" aria-hidden="true"></i></button>
@@ -86,14 +119,23 @@
                                           {% set wids = wid1|int - 1 %}
                                           {% set wid3 = wids|int /279 %}
                                           {% set wid4 = wid3* 99 + 1 %}
+                                          {% if wid1 >= 280 %}
+                                          <span class="progress-meter-text text-lg-end">280/280 day</span>
+                                          <div class="progress" style="height:20px">
+                                            <div class="progress-bar" style="width:{{wid4|int}}%;height:20px">
+                                              <span class="progress-meter-text">280 day</span>
+                                            </div> 
+                                          </div>
+                                          {% else %}
                                           <span class="progress-meter-text text-lg-end">{{wid1|int}}/280 day</span>
                                           <div class="progress" style="height:20px">
-                                           
-                                           
                                             <div class="progress-bar" style="width:{{wid4|int}}%;height:20px">
                                               <span class="progress-meter-text">{{wid1|int}} day</span>
                                             </div> 
                                           </div>
+                                          {% endif %}
+                                          
+                                         
                                         </td>
                                       </tr>
                                 </tbody>

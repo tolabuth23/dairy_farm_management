@@ -61,7 +61,20 @@
         </div>
         <!--End of Form-->
         <hr class="m-3">
-        <h4 class="m-2"><i class="fa fa-btc text-primary" aria-hidden="true"> Sale Milk List</i></h4>
+        <form action="{{sale_milk}}" method='POST'>
+        <div class="box-header">
+          
+        <h3 class="m-2 box-title"><i class="fa fa-btc text-primary" aria-hidden="true"> Sale Milk List</i></h3>
+        <div class="box-tools">
+          <div class="input-group input-group-xl hidden-xs" style="width: 300px;">
+            <input type="text" name="search" class="form-control pull-right" placeholder="Date, Sale no, Supplier Name">
+            <div class="input-group-btn">
+              <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </div>
+          </div>
+        </div> 
+      </div> 
+    </form>
         <div class="box-body table-responsive">
           <table class="table table-hover table-bordered">
               <thead>
@@ -89,39 +102,37 @@
                   <td>{{dt.lite}}</td>
                   <td>{{dt.total}}</td>
                   <td>
-                    <a class="btn btn-info btn-sm" href="{{url_for("order",id=dt.id)}}"
-      
-                    ><i class='bx bx-printer'></i> </a>
-                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{dt.id}}" 
+                    <a class="btn btn-info btn-sm" href="{{url_for("order",id=dt.id)}}"><i class='bx bx-printer'></i> </a>
+                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal2{{dt.id}}" 
                     data-bs-whatever=" Cow"><i class="fa fa-trash-o"></i></button>
                   </td>      
-                    <!-- start of delete  -->
-                    <div class="modal fade" id="exampleModal{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
+                     <!-- start of delete  -->
+                     <div class="modal fade" id="exampleModal2{{dt.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
                       <div class="modal-content">
                           <div class="modal-header">
-                          <h5 class="modal-title text-primary" id="exampleModalLabel"><i class="bi bi-chat-text-fill"></i> Delete Collect Milk</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title text-primary"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Sale Milk</h4>
                           </div>
                           <div class="modal-body">
-                        <h5>Do you want to delete your data?</h5>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <a href="{{url_for("delete_smilk",id = dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
+                         <h5>Do you want to delete your data?</h5>
+                         <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <a href="{{url_for("delete_smilk", id= dt.id)}}" type="submit" class="btn btn-danger">Yes</a>
                           </div>
                           </div>
                       </div>
                       </div>
-                    </div>
-                    <!-- end of delete -->
+                  </div>
+                  <!-- end of delete -->
+
                 </tr>
                 {% endfor %}
             </tbody>
           </table>
         </div>
-
-                  <!--Start of row pagination-->
-
+        <!--Start of row pagination-->
                 <div class="row mt-3">
                   <div class="col-lg-7">
                       <p style="color:  #4581bd;">showing <b><i>{{data.page}}</i></b> to <b><i>{{data.pages}}</i></b> of <b><i>{{data.pages}}</i></b> entries 

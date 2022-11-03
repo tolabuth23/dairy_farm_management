@@ -10,14 +10,26 @@
 
 <section class="content-header">
 <div class="box box-primary mt-2">
-    <div class="box-header with-border" style="text-align: end;">
-        <a href="{{url_for("newstallmilk")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  Add Milk</i></a>
+    <div class="box-header with-border " >
+      <h3 class="box-title text-primary" >List Collect Milk</h3>
+      <div class="box-tools">
+        <form action="{{url_for("collect_milk")}}" method="POST">
+        <div class="input-group input-group-sm hidden-xs" style="width: 300px;">
+          <input type="text" name="by_date" class="form-control pull-right" placeholder="Date, Stall">
+          <div class="input-group-btn">
+            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+      </form>
+      </div>
+      
        
     </div>
     <!--Start form card -->
     <div class="box-body">
-      
+     
         <div class="box-body table-responsive">
+          <a style="text-align: start; " href="{{url_for("newstallmilk")}}" class="btn btn-primary"><i class="fa fa-plus-circle" aria-hidden="true">  Add Milk</i></a>
           <table class="table table-hover table-bordered">
               <thead>
                   <tr>

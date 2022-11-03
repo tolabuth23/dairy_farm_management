@@ -96,6 +96,7 @@ class Employeesalary(db.Model):
 class Salemilk(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     date = db.Column(db.Date(), nullable=False,default=datetime.datetime.utcnow)
+    month =db.Column(db.String(20), nullable=False)
     invoice = db.Column(db.String(50), nullable=False)
     sale_no =db.Column(db.String(50), nullable=False)
     supplier_name = db.Column(db.String(50), nullable=False)
@@ -159,6 +160,7 @@ class Cowsale(db.Model):
 class Expense(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     date = db.Column(db.Date(), nullable=False)
+    month = db.Column(db.String(20), nullable=False)
     purposes = db.Column(db.String(100), nullable=False)
     detail = db.Column(db.String(100), nullable=False)
     total_amount = db.Column(db.Float(), nullable=False)
@@ -352,6 +354,15 @@ class Treatment(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey("user.id"))
     def __repr__(self) -> str:
         return f"<Treatment: {self.medicine}>"
+    
+    
+class Product(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    date = db.Column(db.Date(), default=datetime.datetime.utcnow)
+    month = db.Column(db.String(10), nullable=True)
+    price = db.Column(db.String(10), nullable=True)
+    def __repr__(self) -> str:
+        return f"<Product: {self.month}>"
     
     
     

@@ -15,10 +15,8 @@
 
 <ul class="sidebar-menu" data-widget="tree">
     <li class="header">MAIN NAVIGATION</li>
+    {% if session.user_type == "Farmer" %}
     <li><a href="{{url_for("dashoard")}}"><i class="fa fa-dashboard text-primary" aria-hidden="true"></i> <span class="text-primary">Dashboard</span></a></li>
-   
-
-   
    
     <li class="treeview">
         <a href="">
@@ -100,6 +98,10 @@
             <li><a href="{{url_for("cow_statistic")}}"><i class="fa fa-cloud text-green" aria-hidden="true"> Animal Statistic</i></a></li>
             </ul>
         </li>
+        {% else %}
+        <li><a href=""><i class="fa fa-dashboard text-primary" aria-hidden="true"></i> <span class="text-primary">Dashboard</span></a></li>
+        <li><a href="{{url_for("member")}}"><i class="fa fa-user-secret text-primary" aria-hidden="true"></i> <span class="text-primary">Manage Member</span></a></li>
+        {% endif %}
     </ul>
 
 </section>

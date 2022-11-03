@@ -1,3 +1,4 @@
+from re import search
 from main import db,app
 from flask import render_template,session,request,flash,redirect,url_for,jsonify
 from main.signIO.forms import LoginForm, RegisterForm
@@ -19,12 +20,20 @@ def save_picture(img):
 def delete_picture(img):
     os.remove(os.path.join(app.root_path, 'static/img', img))
     
-@app.route("/cow")
+@app.route("/cow", methods=["POST", "GET"])
 def cow():
     user = User.query.get(current_user.id)
     cow = Cow.query.filter(Cow.user_id == user.id)
     page = request.args.get('page',1,type=int)
-    data = cow.paginate(page = page, per_page=10)
+    if request.method == "POST":
+        search = request.form["search"]
+        if search == "":
+            data = cow.paginate(page=page,per_page = 25)  
+        else:
+            cows = cow.filter(Cow.cow_no.like("%"+search+"%")).order_by(Cow.id.desc())
+            data = cows.paginate(page = page, per_page = 50)
+    else:
+        data = cow.paginate(page = page, per_page=25)
     
     return render_template("/manage/cow.html", data = data,datetime = datetime,d =date)
 
@@ -111,12 +120,22 @@ def edit_cow(id):
 
     return render_template("/manage/edit_cow.html",datetime = datetime,d =date, data = cow, animaltype = animaltype , stall = stall,vacc =vacc)
 
-@app.route("/manage/calf")
+@app.route("/manage/calf", methods=["POST", "GET"])
 def calf():
     user = User.query.get(current_user.id)
     calf =Calf.query.filter(Calf.user_id == user.id)
     page = request.args.get('page',1,type=int)
-    data = calf.paginate(page =page, per_page=5)
+    
+    if request.method == "POST":
+        search = request.form['search']
+        if search == "":
+            
+            data = calf.paginate(page = page, per_page = 25)
+        else:
+            calfs = calf.filter(Calf.calf_no.like("%"+search+"%")).order_by(Calf.id.desc())
+            data = calfs.paginate(page = page, per_page= 25)
+    else:
+        data = calf.paginate(page =page, per_page=25)
     return render_template("/manage/calf.html", data = data,datetime = datetime,d =date)
 
 @app.route("/manage/add_calf", methods=["POST", "GET"])

@@ -10,15 +10,26 @@
 
 <section class="content-header">
 <div class="box box-primary mt-2">
-    <div class="box-header with-border" style="text-align: end;">
-     
-        <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#exampleModal" 
-        data-whatever="Branch"><i class="fa fa-plus-circle" aria-hidden="true">  Add Supplier </i></button>
+    <div class="box-header with-border" >
+        <h3 class="box-title text-primary" ></h3>
+        <div class="box-tools">
+          <form action="{{url_for("supplier")}}" method="POST">
+          <div class="input-group input-group-sm hidden-xs" style="width: 300px;">
+            <input type="text" name="search" class="form-control pull-right" placeholder="Supplier Name, Company Name">
+            <div class="input-group-btn">
+              <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+              </div>
+          </div>
+        </form>
+        </div>
+        
     </div>
 
     <!--Start form card -->
     <div class="box-body">
         <div class="box-body table-responsive">
+            <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#exampleModal" 
+        data-whatever="Branch"><i class="fa fa-plus-circle" aria-hidden="true">  Add Supplier </i></button>
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -32,7 +43,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for dt in data %}
+                {% for dt in data.items %}
                 <tr >
                     <td>{{loop.index}}</td>
                   <td class="text-center">
@@ -133,7 +144,37 @@
 
 
         </div>
+ <!--Start of row pagination-->
 
+ <div class="row mt-3">
+    <div class="col-lg-7">
+        <p style="color:  #4581bd;">showing <b><i>{{data.page}}</i></b> to <b><i>{{data.pages}}</i></b> of <b><i>{{data.pages}}</i></b> entries 
+    </div>
+    <div class="col-lg-5 justify-content-end">
+        <a  href="{{url_for("supplier", page=data.prev_num)}}" class="btn btn-primary  btn-sm 
+        {% if data.page == 1 %}disabled{% endif %}
+        ">
+        Prevous
+      </a>
+     {% for page_num  in data.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+     
+     {% if page_num %}
+        {% if data.page == page_num %}
+           <a href="{{url_for("supplier", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+        {% else %}
+          <a href="{{url_for("supplier", page = page_num)}}" class="btn btn-primary  btn-sm">{{page_num}}</a>
+        {% endif %}
+     {% else %}
+     ...
+     {% endif %}
+     {% endfor %}
+      <a href="{{url_for("supplier", page=data.next_num)}}" class="btn btn-primary  btn-sm 
+      {% if data.page == data.pages %}disabled{% endif %} ">
+      Next
+    </a>
+      </div>
+</div>
+<!--End of row pagination-->  
        
     </div>
     <!--End form card-->
